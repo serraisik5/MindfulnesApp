@@ -36,5 +36,5 @@ flutter run
 
 ## Run tests
 python test_websocket.py (backend ayakta olmalı)
-python test_openai_turbo.py )(API key koymak lazım)
+python test_openai_turbo.py )(API key koymak lazım) (Sakın key'i pushlamayın, git error veriyo)
 python test_openai_realtime.py
