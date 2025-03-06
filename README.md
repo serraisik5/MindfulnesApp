@@ -33,3 +33,8 @@ flutter create frontend
 start flutter
 cd frontend
 flutter run
+
+## Run tests
+python test_websocket.py (backend ayakta olmalı)
+python test_openai_turbo.py )(API key koymak lazım)
+python test_openai_realtime.py
