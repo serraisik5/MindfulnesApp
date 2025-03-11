@@ -1,1 +1,0 @@
- /Users/selenbilgic/AppProjects/bitirme/MindfulnesApp/frontend/.dart_tool/flutter_build/adf069704f328023349d70c90a3c34c6/native_assets.yaml: 
