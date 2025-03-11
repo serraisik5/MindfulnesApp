@@ -1,0 +1,8 @@
+Django
+daphne
+django-channels
+openai
+djangorestframework
+channels
+websockets
+websocket-client

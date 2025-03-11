@@ -1,0 +1,1 @@
+ /Users/selenbilgic/AppProjects/bitirme/minder_frontend/.dart_tool/flutter_build/9a68747755c4522d4f643e5a285aea08/native_assets.yaml: 
