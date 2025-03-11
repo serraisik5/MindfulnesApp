@@ -34,19 +34,45 @@ class _BaseViewState extends State<BaseView> {
         index: selectedIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: appBackground,
-        selectedItemColor: appPrimary,
-        unselectedItemColor: appTertiary,
-        currentIndex: selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(90),
+          ),
+        ),
+        height: 90,
+        child: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8.0,
+          color: appSecondary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(Icons.home,
+                    size: 30,
+                    color: selectedIndex == 0 ? appPrimary : appTertiary),
+                onPressed: () => _onItemTapped(0),
+              ),
+              const SizedBox(width: 20), // Space for the FAB
+              IconButton(
+                icon: Icon(Icons.settings,
+                    size: 30,
+                    color: selectedIndex == 2 ? appPrimary : appTertiary),
+                onPressed: () => _onItemTapped(2),
+              ),
+            ],
+          ),
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 6,
+        backgroundColor: appPrimary, // Customize as needed
+        shape: const CircleBorder(),
+        onPressed: () => _onItemTapped(1), // Tap to select Favorites
+        child: const Icon(size: 30, Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

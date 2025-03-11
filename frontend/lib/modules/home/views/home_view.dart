@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minder_frontend/helpers/constants/colors.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -6,7 +7,9 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appBackground,
       appBar: AppBar(
+        backgroundColor: appBackground,
         title: Text('Home'),
       ),
       body: Center(
