@@ -35,15 +35,15 @@ class _BaseViewState extends State<BaseView> {
         children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: brown,
+        backgroundColor: appBackground,
         selectedItemColor: appPrimary,
-        unselectedItemColor: darkBrown,
+        unselectedItemColor: appTertiary,
         currentIndex: selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.heart_broken), label: 'Favorites'),
+              icon: Icon(Icons.favorite), label: 'Favorites'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
       ),
