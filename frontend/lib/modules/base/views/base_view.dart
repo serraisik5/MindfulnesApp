@@ -3,7 +3,6 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/modules/favorites/views/favorites_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/profile/views/profile_view.dart';
-import 'package:minder_frontend/modules/settings/views/settings_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
@@ -18,7 +17,7 @@ class _BaseViewState extends State<BaseView> {
   final List<Widget> _screens = [
     const HomeView(),
     const FavoritesView(),
-    const SettingsView(),
+    const ProfileView(),
   ];
 
   void _onItemTapped(int index) {
@@ -36,15 +35,19 @@ class _BaseViewState extends State<BaseView> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(90),
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 0),
+            ),
+          ],
         ),
         height: 90,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          color: appSecondary,
+          color: appBackground,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -56,7 +59,7 @@ class _BaseViewState extends State<BaseView> {
               ),
               const SizedBox(width: 20), // Space for the FAB
               IconButton(
-                icon: Icon(Icons.settings,
+                icon: Icon(Icons.person,
                     size: 30,
                     color: selectedIndex == 2 ? appPrimary : appTertiary),
                 onPressed: () => _onItemTapped(2),
@@ -66,11 +69,11 @@ class _BaseViewState extends State<BaseView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        elevation: 6,
+        elevation: 0,
         backgroundColor: appPrimary, // Customize as needed
         shape: const CircleBorder(),
         onPressed: () => _onItemTapped(1), // Tap to select Favorites
-        child: const Icon(size: 30, Icons.add, color: Colors.white),
+        child: const Icon(size: 40, Icons.add, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
