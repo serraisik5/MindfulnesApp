@@ -5,4 +5,6 @@ openai
 djangorestframework
 channels
 websockets
+websocket
 websocket-client
+simpleaudio

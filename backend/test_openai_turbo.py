@@ -2,7 +2,12 @@
 import openai
 
 ## OPENAI_API_KEY = ""
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 def test_openai_turbo_tts():
     client = openai.OpenAI(api_key=OPENAI_API_KEY)
