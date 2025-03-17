@@ -17,6 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from django.urls import path
+from api.views import UserProfileView, MeditationSessionListCreateView, FavoriteSessionListCreateView
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("profile/", UserProfileView.as_view(), name="user-profile"),
+    path("sessions/", MeditationSessionListCreateView.as_view(), name="meditation-sessions"),
+    path("favorites/", FavoriteSessionListCreateView.as_view(), name="favorite-sessions"),
 ]
+

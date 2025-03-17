@@ -65,13 +65,12 @@ def on_open(ws):
             "content": [
                 {
                     "type": "input_text",
-                    "text": "How are you?"
+                    "text": "Create short meditation session."
                 }
             ]
         }
     }
     ws.send(json.dumps(message_event))
-    print("User message sent: 'How are you?'")
     send_response_request(ws)
 
 
@@ -91,17 +90,11 @@ def on_message(ws, message):
 
     data = json.loads(message)
 
-    # Debugging: Print raw WebSocket message
-    print(f"\n🔍 Raw WebSocket Message: {json.dumps(data, indent=2)}")
-
-    # ✅ Handle Text Response
     if data.get("type") in ["response.audio_transcript.done", "response.content_part.done"]:
         transcript = data.get("transcript") or data.get("part", {}).get("transcript")
         if transcript:
             text_response += transcript
             print(f"\n📝 Assistant (partial): {transcript}")
-
-    # ✅ Handle Audio Response
     if data.get("type") == "response.audio.delta":
         if "delta" in data:
             audio_chunk = base64.b64decode(data["delta"])
@@ -111,11 +104,10 @@ def on_message(ws, message):
             # Play audio in real-time using a separate thread
             threading.Thread(target=play_audio, args=(audio_chunk,)).start()
 
-    # ✅ Handle End of Response
     if data.get("type") == "response.done":
         print("✅ Full response received. Closing connection...")
         ws.close()
-        
+
 def on_close(ws, close_status_code, close_msg):
     """Handle WebSocket closure"""
     print("\n🔗 Connection closed.")

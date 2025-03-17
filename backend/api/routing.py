@@ -1,6 +1,6 @@
-from django.urls import path
-from api.consumer import MeditationConsumer
+from django.urls import re_path
+from api.consumers import MeditationConsumer
 
 websocket_urlpatterns = [
-    path("ws/stream_audio/", MeditationConsumer.as_asgi()),  # WebSocket endpoint
+    re_path(r"ws/meditation/$", MeditationConsumer.as_asgi()),
 ]
