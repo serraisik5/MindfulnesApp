@@ -15,7 +15,7 @@ class _BaseViewState extends State<BaseView> {
   int selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeView(),
+    HomeView(),
     const FavoritesView(),
     const ProfileView(),
   ];
