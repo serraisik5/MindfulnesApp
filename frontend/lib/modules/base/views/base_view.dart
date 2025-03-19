@@ -3,6 +3,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/modules/favorites/views/favorites_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/profile/views/profile_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/views/start_meditation_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
@@ -16,7 +17,7 @@ class _BaseViewState extends State<BaseView> {
 
   final List<Widget> _screens = [
     HomeView(),
-    const FavoritesView(),
+    const StartMeditationView(),
     const ProfileView(),
   ];
 
