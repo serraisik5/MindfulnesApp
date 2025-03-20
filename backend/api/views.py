@@ -1,14 +1,18 @@
 from rest_framework import generics
 from .models import CustomUser, MeditationSession, FavoriteSession
-from .serializers import UserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer
+from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer
 ## FOR NOT REAL-TIME ENDPOINTS
 
-# User Profile API
-class UserProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserSerializer
+# Create a new user
+class UserCreateView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 
-    def get_object(self):
-        return self.request.user
+# Retrieve user information by ID
+class UserDetailView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = "id"  # Allows fetching user by ID
 
 # List & Create Meditation Sessions
 class MeditationSessionListCreateView(generics.ListCreateAPIView):

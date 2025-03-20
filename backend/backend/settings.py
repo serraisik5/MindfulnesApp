@@ -25,12 +25,18 @@ SECRET_KEY = "django-insecure-ad@6)zq*@0=%-ew1g3b+&q(4_xowplm4@khe5&x%jkqde#n-mk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "localhost:8001", "127.0.0.1:8001", "localhost:8000", "127.0.0.1:8000"]
 
 # Allow WebSockets from any frontend (for local testing)
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
+CORS_ALLOW_HEADERS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+    "ws://localhost",
+    "ws://127.0.0.1",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "ws://localhost:8000",
@@ -47,6 +53,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'daphne',
     'channels',  # Enables WebSockets in Django
     "django.contrib.admin",
@@ -66,10 +73,11 @@ CHANNEL_LAYERS = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-   # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -106,7 +114,7 @@ DATABASES = {
     }
 }
 
-
+AUTH_USER_MODEL = "api.CustomUser"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

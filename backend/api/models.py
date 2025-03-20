@@ -1,14 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Custom User Model
-class CustomUser(models.Model):
-    username = models.CharField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female"), ("other", "Other")])
-    birthday = models.DateField()
+
+class CustomUser(AbstractUser):
+    gender_choices = [("male", "Male"), ("female", "Female"), ("other", "Other")]
     
-    USERNAME_FIELD = "username"
+    gender = models.CharField(max_length=10, choices=gender_choices)
+    birthday = models.DateField()
+
+    # Add unique related_name to avoid clashes
+    groups = models.ManyToManyField(
+        "auth.Group",
+        related_name="customuser_groups",  # Avoids conflict with default User model
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        "auth.Permission",
+        related_name="customuser_permissions",  # Avoids conflict
+        blank=True
+    )
+
     REQUIRED_FIELDS = ["first_name", "last_name", "gender", "birthday"]
 
     def __str__(self):

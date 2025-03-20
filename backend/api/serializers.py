@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from .models import CustomUser, MeditationSession, FavoriteSession
 
-# User Serializer
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "gender", "birthday"]
+        fields = ["id", "username", "first_name", "last_name", "gender", "birthday"]
+
 
 # Meditation Session Serializer
 class MeditationSessionSerializer(serializers.ModelSerializer):
