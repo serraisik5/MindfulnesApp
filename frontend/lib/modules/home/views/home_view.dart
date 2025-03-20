@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/services/web_socket_service.dart';
+import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -9,6 +12,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late WebSocketService _webSocketService;
   String receivedTranscript = "";
+  String name = "Selen";
 
   @override
   void initState() {
@@ -31,12 +35,23 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Meditation")),
+      backgroundColor: appBackground,
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "Good Morning, $name",
+              style: AppTextStyles.heading,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "We wish you have a good day",
+              style: AppTextStyles.lightheading,
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _webSocketService.sendMeditationRequest("Relaxation", 5);

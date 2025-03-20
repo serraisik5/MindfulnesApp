@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 const String MEDITATION_GIRL = 'assets/images/meditation_girl.png';
 const String LOGIN_BOTTOM_RECTANGLE =
     'assets/images/login_bottom_rectangle.png';

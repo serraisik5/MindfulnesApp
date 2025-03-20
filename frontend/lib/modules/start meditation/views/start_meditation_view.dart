@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class StartMeditationView extends StatefulWidget {
@@ -16,7 +17,6 @@ class _StartMeditationViewState extends State<StartMeditationView>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -31,14 +31,14 @@ class _StartMeditationViewState extends State<StartMeditationView>
           indicatorColor: appPrimary,
           indicator: const UnderlineTabIndicator(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(width: 3.0, color: Colors.blue),
+            borderSide: BorderSide(width: 3.0, color: appPrimary),
             insets: EdgeInsets.symmetric(horizontal: 5.0),
           ),
           labelColor: appPrimary,
           unselectedLabelColor: appTertiary,
-          tabs: const [
-            Tab(text: "Meditate"),
-            Tab(text: "Write Diary"),
+          tabs: [
+            Tab(text: MEDITATE),
+            Tab(text: JOURNAL),
           ],
         ),
       ),
