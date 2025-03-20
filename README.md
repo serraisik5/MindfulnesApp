@@ -22,6 +22,9 @@ python manage.py runserver
 ### run django with websockets
 daphne -b 0.0.0.0 -p 8000 backend.asgi:application
 
+## connect to websocket from backend
+wscat -c ws://127.0.0.1:8001/ws/meditation/
+
 ### flutter
 brew install flutter
 export PATH="$PATH:`brew --prefix`/bin"
