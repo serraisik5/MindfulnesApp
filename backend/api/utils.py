@@ -28,6 +28,7 @@ async def generate_meditation_ws(title, duration, user_channel):
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "OpenAI-Beta": "realtime=v1"
     }
+    transcript_collected = ""
     
     # 🔹 Log headers to ensure key is being sent correctly
     logger.info(f"WebSocket Headers: {headers}")
@@ -85,8 +86,9 @@ async def generate_meditation_ws(title, duration, user_channel):
                 if data.get("type") in ["response.audio_transcript.done", "response.content_part.done"]:
                     transcript = data.get("transcript") or data.get("part", {}).get("transcript")
                     if transcript:
-                        await user_channel.send(json.dumps({"type": "text", "content": transcript}))
-                        logger.info(f"📝 Sent transcript: {transcript[:50]}...")
+                        transcript_collected += f" {transcript}"  # Append text to full transcript
+                        await user_channel.send_text(transcript) 
+                        logger.info(f"📝 Sent transcript update: {transcript[:50]}...")
 
                 # Send audio response as base64
                 if data.get("type") == "response.audio.delta":
@@ -94,6 +96,13 @@ async def generate_meditation_ws(title, duration, user_channel):
                         audio_chunk = base64.b64decode(data["delta"])
                         await user_channel.send(bytes_data=audio_chunk)
                         logger.info("🎵 Sent audio chunk")
+                 # 🔹 Detect when OpenAI streaming is done
+                if data.get("type") == "response.done":
+                    logger.info("✅ Meditation session complete. Closing WebSocket.")
+                    break  # Exit the loop when streaming ends
+
+            await user_channel.close()
+            logger.info("🔌 WebSocket closed manually after streaming ended.")
 
     except websockets.exceptions.ConnectionClosedError as e:
         logger.error(f"❌ WebSocket Connection Error: {e}")
