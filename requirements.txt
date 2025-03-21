@@ -8,3 +8,4 @@ websockets
 websocket
 websocket-client
 simpleaudio
+django-cors-headers
