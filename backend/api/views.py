@@ -3,6 +3,7 @@ from .models import CustomUser, MeditationSession, FavoriteSession
 from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
+from django.shortcuts import get_object_or_404
 ## FOR NOT REAL-TIME ENDPOINTS
 
 # Create a new user
@@ -19,15 +20,22 @@ class UserDetailView(generics.RetrieveAPIView):
 # List Meditation Sessions
 class SessionListView(generics.ListAPIView):
     """Fetch meditation sessions (including anonymous ones)"""
+    queryset = MeditationSession.objects.all()
     serializer_class = MeditationSessionSerializer
-    permission_classes = [AllowAny]  # Allow everyone to access
+    permission_classes = [AllowAny] 
+    
+class SessionListByUserIdView(generics.ListAPIView):
+    """
+    Fetch all meditation sessions for a specific user by user ID.
+    Only accessible to authenticated users (you can restrict further if needed).
+    """
+    serializer_class = MeditationSessionSerializer
+    permission_classes = [IsAuthenticated]  # You can change this to IsAdminUser if needed
 
     def get_queryset(self):
-        """If user is authenticated, return their sessions. Otherwise, return only anonymous sessions."""
-        if self.request.user.is_authenticated:
-            return MeditationSession.objects.filter(user=self.request.user)
-        else:
-            return MeditationSession.objects.filter(user=None)
+        user_id = self.kwargs["user_id"]
+        user = get_object_or_404(CustomUser, id=user_id)
+        return MeditationSession.objects.filter(user=user)
 
 # List & Create Favorite Sessions
 class FavoriteSessionListCreateView(generics.ListCreateAPIView):
