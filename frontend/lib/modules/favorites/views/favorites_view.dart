@@ -11,6 +11,9 @@ class FavoritesView extends StatefulWidget {
 class _FavoritesViewState extends State<FavoritesView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center());
+    return Scaffold(
+        body: Center(
+      child: Text("favorites view"),
+    ));
   }
 }
