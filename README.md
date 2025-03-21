@@ -1,12 +1,4 @@
-## Create venv than do pip install requirements instead of below seperate pip installs
 pip install -r requirements.txt
-
-### django-channels → Enables WebSocket support in Django
-pip install django
-pip install django daphne django-channels openai
-pip install djangorestframework
-pip install channels
-pip install websockets
 
 ### create django project -- do not use
 django-admin startproject backend
@@ -43,3 +35,30 @@ flutter run
 - python test_websocket.py (backend ayakta olmalı)
 - python test_openai_turbo.py (API key koymak lazım) (Sakın key'i pushlamayın, git error veriyo)
 - python test_openai_realtime.py
+
+
+## For user create 
+{
+  "username": "sisik",
+  "first_name": "Serra",
+  "last_name": "Isik",
+  "gender": "female",
+  "birthday": "2002-05-29",
+  "password": "serra123"
+}
+POST http://127.0.0.1:8000/api/user/create/
+
+## For user login
+{
+  "username": "sisik",
+  "password": "serra123"
+}
+
+POST http://127.0.0.1:8000/api/token/
+(response will have access/refresh token)
+
+## Use token for auth endpoints
+Authorization: Bearer <access_token>
+
+## refresh token
+POST http://127.0.0.1:8000/api/token/refresh/

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'api', 
+    "rest_framework_simplejwt", 
 ]
 ASGI_APPLICATION = "backend.asgi.application"
 CHANNEL_LAYERS = {
@@ -117,6 +118,11 @@ DATABASES = {
 AUTH_USER_MODEL = "api.CustomUser"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",  # Enable JWT authentication
+    ),
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
