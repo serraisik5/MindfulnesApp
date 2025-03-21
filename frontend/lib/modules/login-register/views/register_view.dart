@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
+import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/widgets/back_button.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
@@ -70,17 +72,12 @@ class RegisterView extends StatelessWidget {
               right: 20,
               child: Column(
                 children: [
-                  Text("Create your account",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      )),
+                  Text(CREATE_YOUR_ACCOUNT, style: AppTextStyles.heading),
                   SizedBox(
                     height: 105,
                   ),
                   CustomTextField(
-                    hintText: "Name",
+                    hintText: NAME,
                     backgroundColor: appTertiary.withAlpha(70),
                     borderColor: Colors.transparent,
                     controller: nameController,
@@ -89,7 +86,7 @@ class RegisterView extends StatelessWidget {
                     height: 20,
                   ),
                   CustomTextField(
-                    hintText: "Email",
+                    hintText: EMAIL,
                     backgroundColor: appTertiary.withAlpha(70),
                     borderColor: Colors.transparent,
                     controller: emailController,
@@ -98,7 +95,7 @@ class RegisterView extends StatelessWidget {
                     height: 20,
                   ),
                   CustomTextField(
-                    hintText: 'Password',
+                    hintText: PASSWORD,
                     backgroundColor: appTertiary.withAlpha(70),
                     borderColor: Colors.transparent,
                     isPassword: true,
@@ -108,7 +105,7 @@ class RegisterView extends StatelessWidget {
                     height: 50,
                   ),
                   CustomBlueButton(
-                      text: "Get Started",
+                      text: GET_STARTED,
                       onPressed: () {
                         print(nameController.text);
                         Get.offAll(() => const BaseView());

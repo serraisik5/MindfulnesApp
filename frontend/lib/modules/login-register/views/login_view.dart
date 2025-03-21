@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
@@ -30,7 +31,7 @@ class LoginView extends StatelessWidget {
               children: [
                 // Logo
                 Text(
-                  'Minder',
+                  APP_NAME,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -56,14 +57,14 @@ class LoginView extends StatelessWidget {
             child: Column(
               children: [
                 CustomTextField(
-                  hintText: 'Email address',
+                  hintText: EMAIL,
                   backgroundColor: appBackground,
                   borderColor: appPrimary.withAlpha(150),
                   controller: emailController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
-                  hintText: 'Password',
+                  hintText: PASSWORD,
                   backgroundColor: appBackground,
                   borderColor: appPrimary.withAlpha(150),
                   isPassword: true,
@@ -71,7 +72,7 @@ class LoginView extends StatelessWidget {
                 ),
                 const SizedBox(height: 25),
                 CustomBlueButton(
-                  text: 'LOG IN',
+                  text: LOG_IN,
                   onPressed: () {
                     String email = emailController.text;
                     String password = passwordController.text;
@@ -85,7 +86,7 @@ class LoginView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account?",
+                      DONT_HAVE_ACCOUNT,
                       style: TextStyle(color: appTertiary),
                     ),
                     TextButton(
@@ -94,7 +95,7 @@ class LoginView extends StatelessWidget {
                         Get.to(() => RegisterView());
                       },
                       child: Text(
-                        'Sign up',
+                        SIGN_UP,
                         style: TextStyle(
                           color: appPrimary,
                           fontWeight: FontWeight.bold,
