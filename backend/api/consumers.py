@@ -14,20 +14,20 @@ CustomUser = get_user_model()
 
 class MeditationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        """Manually authenticate JWT from headers and accept WebSocket."""
-        logger.info(f"🔌 WebSocket connection attempt")
+        """Authenticate JWT if provided, or allow anonymous access."""
+        logger.info("🔌 WebSocket connection attempt")
 
         self.user = await self.get_user_from_token()
         self.full_transcript = ""
         self.title = None
         self.duration = None
 
-        if self.user and not isinstance(self.user, AnonymousUser):
-            await self.accept()
-            logger.info(f"✅ WebSocket connection accepted! User: {self.user.username}")
+        await self.accept()
+        if isinstance(self.user, AnonymousUser):
+            logger.info("✅ WebSocket accepted for Anonymous user")
         else:
-            logger.warning("❌ Unauthorized WebSocket connection attempt")
-            await self.close()
+            logger.info(f"✅ WebSocket accepted for user: {self.user.username}")
+
 
     async def get_user_from_token(self):
         headers = dict(self.scope.get("headers", []))
@@ -83,12 +83,15 @@ class MeditationConsumer(AsyncWebsocketConsumer):
         logger.info(f"📝 Final transcript length: {transcript_length}")
 
         if transcript_length > 0:
+            user_instance = self.user if not isinstance(self.user, AnonymousUser) else None
+
             await save_meditation_session(
-                self.user if self.user else None,
+                user_instance,
                 self.title,
                 self.duration,
                 self.full_transcript.strip(),
             )
+
             logger.info(f"💾 Meditation session saved: {self.title} ({self.user.username if self.user else 'Anonymous'})")
 
 
