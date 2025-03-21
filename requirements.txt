@@ -9,3 +9,4 @@ websocket
 websocket-client
 simpleaudio
 django-cors-headers
+djangorestframework-simplejwt
