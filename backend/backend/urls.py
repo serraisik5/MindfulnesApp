@@ -15,14 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
-from django.urls import path
-from api.views import UserProfileView, MeditationSessionListCreateView, FavoriteSessionListCreateView
+from django.urls import path, include
 
 urlpatterns = [
-    path("profile/", UserProfileView.as_view(), name="user-profile"),
-    path("sessions/", MeditationSessionListCreateView.as_view(), name="meditation-sessions"),
-    path("favorites/", FavoriteSessionListCreateView.as_view(), name="favorite-sessions"),
+    path("admin/", admin.site.urls),
+    path("api/", include("api.urls")),  # Include app-level URLs
 ]
-
