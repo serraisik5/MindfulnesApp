@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
+import 'package:minder_frontend/services/audio_service.dart';
 import 'package:minder_frontend/services/web_socket_service.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
@@ -13,6 +14,7 @@ class _HomeViewState extends State<HomeView> {
   late WebSocketService _webSocketService;
   String receivedTranscript = "";
   String name = "Selen";
+  bool isPlaying = false;
 
   @override
   void initState() {
@@ -76,6 +78,16 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                if (isPlaying) {
+                  await MyAudioHandler().pause();
+                } else {
+                  await MyAudioHandler().play();
+                }
+              },
+              child: Text(isPlaying ? "Pause" : "Play"),
+            )
           ],
         ),
       ),
