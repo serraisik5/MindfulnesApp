@@ -6,6 +6,11 @@ import websockets
 import base64
 import logging
 from dotenv import load_dotenv
+from websockets.client import connect  
+from websockets.exceptions import ConnectionClosedError
+from websockets.client import connect  
+from websockets.exceptions import ConnectionClosedError
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,6 +29,8 @@ else:
 async def generate_meditation_ws(title, duration, user_channel):
     """Connects to OpenAI WebSocket and streams meditation session to user WebSocket."""
     
+    print("selen123")
+    
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "OpenAI-Beta": "realtime=v1"
@@ -34,7 +41,9 @@ async def generate_meditation_ws(title, duration, user_channel):
     logger.info(f"WebSocket Headers: {headers}")
 
     try:
-        async with websockets.connect(OPENAI_REALTIME_WS_URL, extra_headers=headers) as ws:
+        async with connect(OPENAI_REALTIME_WS_URL, extra_headers=headers) as ws:
+
+
             logger.info("✅ Successfully connected to OpenAI WebSocket")
             
             # Step 1: Start the session

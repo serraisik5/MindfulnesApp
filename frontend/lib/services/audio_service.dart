@@ -171,6 +171,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> play() async {
+    print("selen13");
     try {
       if (!audioPlayer.isOpen()) {
         log("Audio player is not open. Reinitializing...");
@@ -178,6 +179,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
 
       if (!isPlaying) {
+        print("selen12");
         if (isCompleted) {
           log("Playback completed, starting from the beginning...");
           //await startPlayer(); // Restart playback
