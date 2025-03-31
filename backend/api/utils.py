@@ -43,9 +43,9 @@ async def generate_meditation_ws(title, duration, user_channel):
                 "type": "session.update",
                 "session": {
                     "modalities": ["audio", "text"],
-                    "voice": "alloy",
+                    "voice": "sage",
                     "output_audio_format": "pcm16",
-                    "instructions": "Generate a calm, guided meditation session in a soft, soothing tone."
+                    "instructions": "Generate a calm, guided meditation session in a soft, soothing tone, but dont be too slow."
                 }
             }
             await ws.send(json.dumps(session_event))

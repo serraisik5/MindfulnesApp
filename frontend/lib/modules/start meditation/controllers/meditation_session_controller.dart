@@ -10,6 +10,7 @@ class MeditationSessionController extends GetxController {
   final RxString transcript = ''.obs;
   final RxBool isLoading = false.obs;
   final RxBool hasStartedPlayer = false.obs;
+  final List<Uint8List> _bufferedChunks = [];
 
   @override
   void onInit() {
@@ -39,16 +40,26 @@ class MeditationSessionController extends GetxController {
     if (!hasStartedPlayer.value) {
       hasStartedPlayer.value = true;
       isLoading.value = true;
+
+      // Buffer this first chunk
+      _bufferedChunks.add(audioBytes);
+
       MyAudioHandler().startPlayer(song: null).then((_) {
         isLoading.value = false;
+
+        // Flush all buffered chunks now that the player is ready
+        for (final chunk in _bufferedChunks) {
+          MyAudioHandler().addStream(chunk);
+        }
+        _bufferedChunks.clear();
       });
+    } else {
+      MyAudioHandler().addStream(audioBytes);
     }
-    MyAudioHandler().addStream(audioBytes);
-    isLoading.value = false;
   }
 
   void startSession(String title, int duration) {
-    //disposeSession();
+    disposeSession();
     MyAudioHandler().resetFoodSink();
     MyAudioHandler().startPlayer(song: null);
     isLoading.value = true;
