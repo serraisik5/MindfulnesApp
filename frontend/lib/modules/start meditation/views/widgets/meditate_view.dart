@@ -3,21 +3,27 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 import 'package:minder_frontend/services/web_socket_service.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
-class HomeView extends StatefulWidget {
+class MeditateView extends StatefulWidget {
+  const MeditateView({super.key});
+
   @override
-  _HomeViewState createState() => _HomeViewState();
+  MeditateViewState createState() => MeditateViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class MeditateViewState extends State<MeditateView> {
   late WebSocketService _webSocketService;
   String receivedTranscript = "";
-  String name = "Selen";
   bool isPlaying = false;
+
+  final sessionController = Get.put(
+    MeditationSessionController(),
+  );
 
   @override
   void initState() {
@@ -41,28 +47,13 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Good Morning, $name",
-              style: AppTextStyles.heading,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "We wish you have a good day",
-              style: AppTextStyles.lightheading,
-            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                _webSocketService.sendMeditationRequest("Relaxation", 5);
+                sessionController.startSession("Relaxation", 5);
+                Get.to(PlayerView());
               },
               child: Text("Start Meditation"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                print("Transcript: \n$receivedTranscript");
-              },
-              child: Text("Print Transcript"),
             ),
             SizedBox(height: 20),
             Expanded(
