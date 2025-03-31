@@ -5,7 +5,7 @@ import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
-import 'package:minder_frontend/widgets/back_button.dart';
+import 'package:minder_frontend/widgets/buttons/back_button.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
 import 'package:minder_frontend/widgets/custom_text_field.dart';
 

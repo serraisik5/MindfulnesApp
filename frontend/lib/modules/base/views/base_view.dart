@@ -3,6 +3,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/modules/favorites/views/favorites_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/profile/views/profile_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/start_meditation_view.dart';
 
 class BaseView extends StatefulWidget {

@@ -29,7 +29,7 @@ class CustomBackButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: backgroundColor,
-          border: Border.all(color: borderColor, width: 1.5),
+          border: Border.all(color: borderColor, width: 0.5),
         ),
         child: Center(
           child: Icon(

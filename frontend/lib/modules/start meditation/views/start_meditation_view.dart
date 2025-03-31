@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
+import 'package:minder_frontend/modules/start%20meditation/views/widgets/meditate_view.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class StartMeditationView extends StatefulWidget {
@@ -44,8 +45,8 @@ class _StartMeditationViewState extends State<StartMeditationView>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          Center(child: Text("Meditate Content")),
+        children: [
+          MeditateView(),
           Center(child: Text("Diary Content")),
         ],
       ),
