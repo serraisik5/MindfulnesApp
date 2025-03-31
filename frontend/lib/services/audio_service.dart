@@ -55,27 +55,29 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       await audioPlayer.openPlayer();
       _setupMediaControls();
       _emitPlayerState(playing: false, processingState: ProcessingState.idle);
-      log("FlutterSoundPlayer initialized");
+      print("FlutterSoundPlayer initialized");
     } catch (e) {
-      log("Error initializing FlutterSoundPlayer: $e");
+      print("Error initializing FlutterSoundPlayer: $e");
     }
   }
 
   void addStream(Uint8List stream) {
     if (audioPlayer.foodSink != null) {
       audioPlayer.foodSink?.add(FoodData(stream));
+      print("food added");
     } else {
-      log("Error: foodSink is null. Ensure player is initialized.");
+      print("Error: foodSink is null. Ensure player is initialized.");
     }
   }
 
   Future<void> startPlayer({required MediaItem? song}) async {
     try {
       if (isPlaying) {
-        log("Another audio is playing. Stopping it before starting a new one.");
+        print(
+            "Another audio is playing. Stopping it before starting a new one.");
         await stop();
       }
-
+      print("player started");
       if (!isPlaying) {
         isCompleted = false;
         isPlaying = true;
@@ -101,26 +103,27 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         isPlaying = true;
         _emitPlayerState(playing: true, processingState: ProcessingState.ready);
         updateNowPlayingInfo(song);
-        log("Player started in streaming mode");
+        print("Player started in streaming mode");
       } else {
         print("player is already playing");
       }
     } catch (e) {
-      log("Error starting player: $e");
+      print("Error starting player: $e");
     }
   }
 
   void _setupMediaControls() {
-    AudioServiceBackground.setState(
+    // Just update playbackState — no background audio needed
+    playbackState.add(playbackState.value.copyWith(
+      playing: isPlaying,
       controls: [
         MediaControl.play,
         MediaControl.pause,
         MediaControl.stop,
       ],
-      playing: isPlaying,
       processingState:
           isPlaying ? AudioProcessingState.ready : AudioProcessingState.idle,
-    );
+    ));
   }
 
   void updateNowPlayingInfo(MediaItem? song) {

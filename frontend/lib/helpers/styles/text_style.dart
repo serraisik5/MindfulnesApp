@@ -16,7 +16,7 @@ class AppTextStyles {
 
   static const TextStyle lightheading = TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w300,
+      fontWeight: FontWeight.w400,
       letterSpacing: 0.8,
       color: appTertiary);
 
