@@ -58,13 +58,10 @@ class MeditationConsumer(AsyncWebsocketConsumer):
             self.title = data.get("title", "Relaxation")
             self.duration = int(data.get("duration", 1))
             self.background_noise = data.get("background_noise", "rainy").lower()
-            self.voice = int(data.get("voice", 1))
+            self.voice = data.get("voice", "sage").lower()
+
             if self.background_noise not in ["rainy", "piano", "fire"]:
                 raise ValueError("Invalid background_noise option")
-
-            if self.voice not in [1, 2, 3, 4]:
-                raise ValueError("Invalid voice selection")
-
             if self.duration <= 0:
                 raise ValueError("Duration must be greater than 0")
 
