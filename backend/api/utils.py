@@ -22,8 +22,17 @@ if OPENAI_API_KEY:
 else:
     logger.error("❌ OPENAI_API_KEY is missing or not set!")
 
-async def generate_meditation_ws(title, duration, user_channel):
+VOICE_MAP = {
+    1: "nova",
+    2: "shimmer",
+    3: "echo",
+    4: "sage"
+}
+
+async def generate_meditation_ws(title, duration, voice, user_channel):
     """Connects to OpenAI WebSocket and streams meditation session to user WebSocket."""
+    selected_voice = VOICE_MAP.get(voice, "sage")  # default to 'sage' if invalid
+    logger.info(f"Selected voice: {selected_voice}")
     
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -43,7 +52,7 @@ async def generate_meditation_ws(title, duration, user_channel):
                 "type": "session.update",
                 "session": {
                     "modalities": ["audio", "text"],
-                    "voice": "sage",
+                    "voice": selected_voice,
                     "output_audio_format": "pcm16",
                     "instructions": "Generate a calm, guided meditation session in a soft, soothing tone, but dont be too slow."
                 }
@@ -80,6 +89,7 @@ async def generate_meditation_ws(title, duration, user_channel):
 
             # Step 4: Stream response from OpenAI to the user via WebSocket
             async for message in ws:
+                logger.debug(f"📩 Raw message: {message}") 
                 data = json.loads(message)
                 logger.debug(f"📩 Received WebSocket Message: {data}")
 
@@ -101,7 +111,8 @@ async def generate_meditation_ws(title, duration, user_channel):
                 if data.get("type") == "response.done":
                     logger.info("✅ Meditation session complete. Closing WebSocket.")
                     break  # Exit the loop when streaming ends
-
+                elif data.get("type", "").startswith("response."):
+                    logger.info(f"📌 Unhandled response type: {data['type']} → {data}")
             await user_channel.close()
             logger.info("🔌 WebSocket closed manually after streaming ended.")
 

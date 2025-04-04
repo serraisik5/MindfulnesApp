@@ -87,6 +87,7 @@ def play_audio(audio_chunk):
 def on_message(ws, message):
     """Receive and process streamed text & audio responses in real-time"""
     global audio_data, text_response
+    print(f"\n📩 Raw message: {message}") 
 
     data = json.loads(message)
 
