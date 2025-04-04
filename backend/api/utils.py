@@ -22,17 +22,9 @@ if OPENAI_API_KEY:
 else:
     logger.error("❌ OPENAI_API_KEY is missing or not set!")
 
-VOICE_MAP = {
-    1: "nova",
-    2: "shimmer",
-    3: "echo",
-    4: "sage"
-}
-
 async def generate_meditation_ws(title, duration, voice, user_channel):
     """Connects to OpenAI WebSocket and streams meditation session to user WebSocket."""
-    selected_voice = VOICE_MAP.get(voice, "sage")  # default to 'sage' if invalid
-    logger.info(f"Selected voice: {selected_voice}")
+    logger.info(f"Selected voice: {voice}")
     
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -52,7 +44,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
                 "type": "session.update",
                 "session": {
                     "modalities": ["audio", "text"],
-                    "voice": selected_voice,
+                    "voice": voice,
                     "output_audio_format": "pcm16",
                     "instructions": "Generate a calm, guided meditation session in a soft, soothing tone, but dont be too slow."
                 }
