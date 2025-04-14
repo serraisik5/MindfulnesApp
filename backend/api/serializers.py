@@ -30,6 +30,7 @@ class MeditationSessionSerializer(serializers.ModelSerializer):
             "background_noise",
             "voice",
             "created_at",
+            "audio_file"
         ]
 
 # Favorite Session Serializer

@@ -24,10 +24,9 @@ class MeditationConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
         if isinstance(self.user, AnonymousUser):
-            logger.info("✅ WebSocket accepted for Anonymous user")
+            logger.info("WebSocket accepted for Anonymous user")
         else:
-            logger.info(f"✅ WebSocket accepted for user: {self.user.username}")
-
+            logger.info(f"WebSocket accepted for user: {self.user.username}")
 
     async def get_user_from_token(self):
         headers = dict(self.scope.get("headers", []))
@@ -42,15 +41,14 @@ class MeditationConsumer(AsyncWebsocketConsumer):
                 user = await database_sync_to_async(CustomUser.objects.get)(id=user_id)
                 return user
             except Exception as e:
-                logger.error(f"❌ Token authentication failed: {e}")
+                logger.error(f"Token authentication failed: {e}")
         return AnonymousUser()
 
     async def receive(self, text_data):
         """Receive meditation request, validate input, and start streaming."""
         logger.info(f"📩 WebSocket request received: {text_data}")
-
         if not text_data:
-            logger.error("❌ Received empty WebSocket message")
+            logger.error("Received empty WebSocket message")
             return
 
         try:
@@ -70,7 +68,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
             asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self))
 
         except (json.JSONDecodeError, ValueError) as e:
-            logger.error(f"❌ Invalid request: {e}")
+            logger.error(f"Invalid request: {e}")
             await self.send(json.dumps({"error": str(e)}))
 
     async def send_text(self, text):
@@ -84,28 +82,5 @@ class MeditationConsumer(AsyncWebsocketConsumer):
         transcript_length = len(self.full_transcript.strip())
         logger.info(f"📝 Final transcript length: {transcript_length}")
 
-        if transcript_length > 0:
-            user_instance = self.user if not isinstance(self.user, AnonymousUser) else None
 
-            await save_meditation_session(
-                user_instance,
-                self.title,
-                self.duration,
-                self.full_transcript.strip(),
-                self.background_noise,
-                self.voice
-            )
-            logger.info(f"💾 Meditation session saved: {self.title} ({self.user.username if self.user else 'Anonymous'})")
-
-
-@database_sync_to_async
-def save_meditation_session(user, title, duration, text, background_noise, voice):
-    MeditationSession.objects.create(
-        user=user,
-        title=title,
-        duration=duration,
-        text=text,
-        background_noise=background_noise,
-        voice=voice
-    )
 
