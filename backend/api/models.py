@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 # Custom User Model
 
 class CustomUser(AbstractUser):
+    # mail, usernmae gerek yok, login mail ve şifre  
     gender_choices = [("male", "Male"), ("female", "Female"), ("other", "Other")]
     
     gender = models.CharField(max_length=10, choices=gender_choices)
