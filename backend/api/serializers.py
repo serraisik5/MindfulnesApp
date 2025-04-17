@@ -18,12 +18,19 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
-# Meditation Session Serializer
 class MeditationSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = MeditationSession
-        fields = ["id", "user", "title", "text", "duration", "created_at"]
+        fields = [
+            "id",
+            "user",
+            "title",
+            "text",
+            "duration",
+            "background_noise",
+            "voice",
+            "created_at",
+        ]
 
 # Favorite Session Serializer
 class FavoriteSessionSerializer(serializers.ModelSerializer):

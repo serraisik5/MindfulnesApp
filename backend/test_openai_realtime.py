@@ -49,7 +49,7 @@ def on_open(ws):
         "type": "session.update",
         "session": {
             "modalities": ["audio", "text"],  # Request both text & audio
-            "voice": "alloy",  # Choose voice: alloy, echo, fable, onyx, nova, shimmer
+            "voice": "nova",  # Choose voice: alloy, echo, fable, onyx, nova, shimmer
             "output_audio_format": "pcm16", 
             "instructions": "You are a friendly AI assistant. Please provide both text and actual audio data for your responses."
         }
@@ -87,6 +87,7 @@ def play_audio(audio_chunk):
 def on_message(ws, message):
     """Receive and process streamed text & audio responses in real-time"""
     global audio_data, text_response
+    print(f"\n📩 Raw message: {message}") 
 
     data = json.loads(message)
 

@@ -56,14 +56,18 @@ class MeditationConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             self.title = data.get("title", "Relaxation")
-            self.duration = int(data.get("duration", 5))
+            self.duration = int(data.get("duration", 1))
+            self.background_noise = data.get("background_noise", "rainy").lower()
+            self.voice = data.get("voice", "sage").lower()
 
+            if self.background_noise not in ["rainy", "piano", "fire"]:
+                raise ValueError("Invalid background_noise option")
             if self.duration <= 0:
                 raise ValueError("Duration must be greater than 0")
 
-            logger.info(f"🔹 Title: {self.title}, Duration: {self.duration}")
+            logger.info(f"🔹 Title: {self.title}, Duration: {self.duration}, Noise: {self.background_noise}, Voice: {self.voice}")
 
-            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self))
+            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self))
 
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"❌ Invalid request: {e}")
@@ -71,9 +75,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
 
     async def send_text(self, text):
         """Receive and store transcript updates from OpenAI."""
-        logger.info(f"📝 Received transcript update: {text[:50]}...")  # Log received transcript
         self.full_transcript += f" {text}"  # Append transcript
-        logger.info(f"📏 Updated transcript length: {len(self.full_transcript.strip())}")  # Log length
         await self.send(json.dumps({"type": "text", "content": text}))
 
     async def disconnect(self, close_code):
@@ -90,12 +92,21 @@ class MeditationConsumer(AsyncWebsocketConsumer):
                 self.title,
                 self.duration,
                 self.full_transcript.strip(),
+                self.background_noise,
+                self.voice
             )
 
             logger.info(f"💾 Meditation session saved: {self.title} ({self.user.username if self.user else 'Anonymous'})")
 
 
 @database_sync_to_async
-def save_meditation_session(user, title, duration, text):
-    """Save meditation session asynchronously in the database."""
-    return MeditationSession.objects.create(user=user, title=title, duration=duration, text=text)
+def save_meditation_session(user, title, duration, text, background_noise, voice):
+    MeditationSession.objects.create(
+        user=user,
+        title=title,
+        duration=duration,
+        text=text,
+        background_noise=background_noise,
+        voice=voice
+    )
+

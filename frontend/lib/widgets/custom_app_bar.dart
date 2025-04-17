@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
@@ -15,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: appBackground,
       elevation: 0,
       title: Text(
-        'Minder',
+        APP_NAME,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
