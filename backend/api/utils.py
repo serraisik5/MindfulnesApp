@@ -88,6 +88,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
 
             # Step 4: Stream response from OpenAI to the user via WebSocket
             async for message in ws:
+                logger.debug(f"📩 Raw message: {message}") 
                 data = json.loads(message)
                 #logger.debug(f"📩 Received WebSocket Message: {data}")
 
