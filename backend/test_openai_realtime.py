@@ -49,7 +49,7 @@ def on_open(ws):
         "type": "session.update",
         "session": {
             "modalities": ["audio", "text"],  # Request both text & audio
-            "voice": "nova",  # Choose voice: alloy, echo, fable, onyx, nova, shimmer
+            "voice": "alloy",  # Choose voice: alloy, echo, ...
             "output_audio_format": "pcm16", 
             "instructions": "You are a friendly AI assistant. Please provide both text and actual audio data for your responses."
         }

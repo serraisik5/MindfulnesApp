@@ -12,12 +12,13 @@ cd backend
 python manage.py runserver
 
 ### run django with websockets
-daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+daphne -b 0.0.0.0 -p 8001 backend.asgi:application
 
 ## connect to websocket from backend
 wscat -c ws://127.0.0.1:8001/ws/meditation/
+wscat -c ws://127.0.0.1:8001/ws/meditation/ -H "Authorization: Bearer <your_access_token>"
 ## give input as json
-{ "title": "Sleep", "duration": 1, "voice": "nova", "background_noise": "rainy" }
+{ "title": "Sleep", "duration": 1, "voice": "coral", "background_noise": "rainy" }
 
 
 ### flutter
@@ -63,3 +64,7 @@ Authorization: Bearer <access_token>
 
 ## refresh token
 POST http://127.0.0.1:8000/api/token/refresh/
+
+## reach to saved audios
+http://localhost:8000/media/sessions/audio/23_audio.wav
+
