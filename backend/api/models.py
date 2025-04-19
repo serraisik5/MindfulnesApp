@@ -41,7 +41,7 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ["first_name"]  # still required for createsuperuser
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name}"
 
 
 VOICE_CHOICES = [
