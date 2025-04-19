@@ -2,3 +2,4 @@
 venv
 .DS_Store
 .env
+backend/db.sqlite3
