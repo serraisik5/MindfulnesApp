@@ -41,18 +41,16 @@ flutter run
 
 ## For user create 
 {
-  "username": "sisik",
-  "first_name": "Serra",
-  "last_name": "Isik",
-  "gender": "female",
-  "birthday": "2002-05-29",
-  "password": "serra123"
+  "email": "serra@example.com",
+  "password": "serra123",
+  "first_name": "Serra"
 }
+
 POST http://127.0.0.1:8000/api/user/create/
 
 ## For user login
 {
-  "username": "sisik",
+  "email": "serra@example.com",
   "password": "serra123"
 }
 
