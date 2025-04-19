@@ -1,12 +1,15 @@
 from rest_framework import generics
 from .models import CustomUser, MeditationSession, FavoriteSession
-from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer
+from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer, CustomTokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-## FOR NOT REAL-TIME ENDPOINTS
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 # Create a new user
 class UserCreateView(generics.CreateAPIView):
