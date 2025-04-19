@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)  # Set up logging
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_REALTIME_WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17"
 
-# 🔹 Log the API key (only first 5 characters for security)
+# Log the API key 
 if OPENAI_API_KEY:
     logger.info(f"Using OpenAI API Key: {OPENAI_API_KEY[:5]}... (masked)")
 else:

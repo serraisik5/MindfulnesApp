@@ -7,7 +7,11 @@ from django.core.exceptions import ValidationError
 
 User = get_user_model()
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
+    birthday = serializers.DateField(required=False, allow_null=True)
+    gender = serializers.ChoiceField(choices=User.gender_choices, required=False, allow_null=True)
 
     class Meta:
         model = User
@@ -56,3 +60,17 @@ class FavoriteSessionSerializer(serializers.ModelSerializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = "email"
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Include critical user info in response
+        data["user"] = {
+            "id": self.user.id,
+            "email": self.user.email,
+            "first_name": self.user.first_name,
+        }
+        return data
