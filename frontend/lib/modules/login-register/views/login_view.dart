@@ -4,6 +4,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
 import 'package:minder_frontend/widgets/custom_text_field.dart';
@@ -11,6 +12,10 @@ import 'package:minder_frontend/widgets/custom_text_field.dart';
 class LoginView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  LoginView({super.key}) {
+    Get.put(AuthController());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +81,9 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     String email = emailController.text;
                     String password = passwordController.text;
+                    AuthController().login(email, password);
                     print('Email: $email, Password: $password');
-                    Get.offAll(() => const BaseView());
+                    //Get.offAll(() => const BaseView());
                     // Perform authentication logic
                   },
                 ),

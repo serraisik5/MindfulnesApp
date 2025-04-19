@@ -39,6 +39,9 @@ dependencies:
   flutter_sound: ^9.11.2
   audio_service: ^0.18.17
   flutter_svg: ^2.0.17
+  flutter_secure_storage: ^4.2.1
+  shared_preferences: ^2.5.3
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

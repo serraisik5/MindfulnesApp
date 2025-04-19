@@ -19,7 +19,7 @@ class _BaseViewState extends State<BaseView> {
   final List<Widget> _screens = [
     HomeView(),
     const StartMeditationView(),
-    const ProfileView(),
+    ProfileView(),
   ];
 
   void _onItemTapped(int index) {

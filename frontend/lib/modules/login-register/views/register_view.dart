@@ -4,13 +4,17 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
+import 'package:minder_frontend/models/user_model.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/widgets/buttons/back_button.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
 import 'package:minder_frontend/widgets/custom_text_field.dart';
 
 class RegisterView extends StatelessWidget {
-  RegisterView({super.key});
+  RegisterView({super.key}) {
+    Get.put(AuthController());
+  }
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -107,8 +111,19 @@ class RegisterView extends StatelessWidget {
                   CustomBlueButton(
                       text: GET_STARTED,
                       onPressed: () {
+                        final user = UserModel(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                          firstName: nameController.text.trim(),
+                          lastName: '', // or use another input
+                          gender: 'male', // or add a dropdown input
+                          birthday: '2000-01-01',
+                        );
+
+                        AuthController().register(user);
+
                         print(nameController.text);
-                        Get.offAll(() => const BaseView());
+                        //Get.offAll(() => const BaseView());
                       })
                 ],
               )),
