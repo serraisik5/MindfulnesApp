@@ -36,6 +36,18 @@ class UserCreateView(generics.CreateAPIView):
             "access": str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
 
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+    def get_object(self):
+        return self.request.user
+
+class PublicUserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [AllowAny]
+
 # Retrieve user information by ID
 class UserDetailView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
