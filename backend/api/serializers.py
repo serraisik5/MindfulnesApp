@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 User = get_user_model()
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=False)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=False, allow_blank=True)
     birthday = serializers.DateField(required=False, allow_null=True)
@@ -16,6 +16,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "email", "password", "first_name", "last_name", "gender", "birthday"]
+        read_only_fields = ["id"]  # prevent id updates
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -32,6 +33,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
             birthday=validated_data.get("birthday"),
         )
         return user
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            if attr == "password":
+                instance.set_password(value)
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 class MeditationSessionSerializer(serializers.ModelSerializer):
     class Meta:

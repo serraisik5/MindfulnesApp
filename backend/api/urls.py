@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import UserCreateView, UserDetailView, SessionListView, SessionListByUserIdView, user_audio_sessions, session_audio_by_id, add_favorite, FavoriteSessionListView
+from .views import UserCreateView, UserDetailView, SessionListView, SessionListByUserIdView, user_audio_sessions, session_audio_by_id, add_favorite, FavoriteSessionListView, UserUpdateView, PublicUserListView
 
 urlpatterns = [
     path("user/create/", UserCreateView.as_view(), name="user-create"),
     path("user/<int:id>/", UserDetailView.as_view(), name="user-detail"),
+    path("user/update/", UserUpdateView.as_view(), name="user-update"),
+    path("user/all/", PublicUserListView.as_view(), name="user-list-public"),
     path("sessions/", SessionListView.as_view(), name="session-list"),
     path("sessions/user/<int:user_id>/", SessionListByUserIdView.as_view(), name="sessions-by-user"),
     path("sessions/audio/user/", user_audio_sessions, name="user-audio-sessions"),
