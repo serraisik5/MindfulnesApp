@@ -5,11 +5,16 @@ PODS:
   - audio_session (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_secure_storage (3.3.1):
+    - Flutter
   - flutter_sound (9.26.0):
     - Flutter
     - flutter_sound_core (= 9.26.0)
   - flutter_sound_core (9.26.0)
   - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - sqflite_darwin (0.0.4):
@@ -20,8 +25,10 @@ DEPENDENCIES:
   - audio_service (from `.symlinks/plugins/audio_service/darwin`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - Flutter (from `Flutter`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
 
 SPEC REPOS:
@@ -35,21 +42,27 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audio_session/ios"
   Flutter:
     :path: Flutter
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_sound:
     :path: ".symlinks/plugins/flutter_sound/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
 
 SPEC CHECKSUMS:
-  audio_service: cab6c1a0eaf01b5a35b567e11fa67d3cc1956910
-  audio_session: 19e9480dbdd4e5f6c4543826b2e8b0e4ab6145fe
+  audio_service: aa99a6ba2ae7565996015322b0bb024e1d25c6fd
+  audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_sound: 39446c16b0111b4926ff261c5c4d601bc1d5d661
+  flutter_secure_storage: 50035aef357c5a8bdd67fd6bc81370d46efc4d16
+  flutter_sound: 52bc351d9035fede9085cbf99c296c62897ceadd
   flutter_sound_core: 938c91404747d79bf14a0c85b90a5d95ed7ed5c4
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
