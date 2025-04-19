@@ -41,13 +41,11 @@ class MeditationSessionController extends GetxController {
       hasStartedPlayer.value = true;
       isLoading.value = true;
 
-      // Buffer this first chunk
       _bufferedChunks.add(audioBytes);
 
       MyAudioHandler().startPlayer(song: null).then((_) {
         isLoading.value = false;
 
-        // Flush all buffered chunks now that the player is ready
         for (final chunk in _bufferedChunks) {
           MyAudioHandler().addStream(chunk);
         }

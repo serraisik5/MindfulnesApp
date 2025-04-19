@@ -88,8 +88,8 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           codec: Codec.pcm16,
           sampleRate: 24000,
           numChannels: 1,
-          interleaved: true, // Add the required 'interleaved' parameter
-          bufferSize: 4096, // Add the required 'bufferSize' parameter
+          interleaved: true, 
+          bufferSize: 4096,
           onBufferUnderlow: () {
             isPlaying = false;
             isCompleted = true;
