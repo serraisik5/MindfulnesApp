@@ -12,7 +12,7 @@ venv/
 .env
 
 # Media or generated content
-.media/
+backend/media/
 
 # Gradle (if using Java tools)
 .gradle/
