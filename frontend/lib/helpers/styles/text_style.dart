@@ -20,6 +20,9 @@ class AppTextStyles {
       letterSpacing: 0.8,
       color: appTertiary);
 
+  static const TextStyle kw600s16 = TextStyle(
+      fontSize: 16, fontWeight: FontWeight.w600, color: appBackground);
+
   static const TextStyle body = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,

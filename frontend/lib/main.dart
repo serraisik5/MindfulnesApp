@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/login_view.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/services/audio_service.dart';
@@ -12,6 +13,8 @@ import 'package:minder_frontend/services/audio_service.dart';
 MyAudioHandler myAudioHandler = MyAudioHandler();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final authController = Get.put(AuthController(), permanent: true);
+  await authController.tryAutoLogin();
   runApp(const MyApp());
 }
 

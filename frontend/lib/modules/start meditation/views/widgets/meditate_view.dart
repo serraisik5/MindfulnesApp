@@ -1,82 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
-import 'package:minder_frontend/services/audio_service.dart';
-import 'package:minder_frontend/services/web_socket_service.dart';
+import 'package:minder_frontend/modules/start%20meditation/views/widgets/parameter_dropdown.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
+import 'package:minder_frontend/widgets/custom_blue_button.dart';
 
 class MeditateView extends StatefulWidget {
-  const MeditateView({super.key});
+  const MeditateView({Key? key}) : super(key: key);
 
   @override
-  MeditateViewState createState() => MeditateViewState();
+  State<MeditateView> createState() => _MeditateViewState();
 }
 
-class MeditateViewState extends State<MeditateView> {
-  late WebSocketService _webSocketService;
-  String receivedTranscript = "";
-  bool isPlaying = false;
+class _MeditateViewState extends State<MeditateView> {
+  // your controller:
+  final sessionController = Get.put(MeditationSessionController());
 
-  final sessionController = Get.put(
-    MeditationSessionController(),
-  );
+  // Available meditation types
+  final List<String> _types = [
+    "Relaxation",
+    "Personal Growth",
+    "Better Sleep",
+    "Reduce Stress",
+    "Improve Performance",
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _webSocketService = WebSocketService();
-  }
-
-  @override
-  void dispose() {
-    _webSocketService.dispose();
-    super.dispose();
-  }
+  String _selectedType = "Relaxation";
+  double _selectedDuration = 5; // in minutes
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBackground,
-      appBar: CustomAppBar(),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                sessionController.startSession("Relaxation", 5);
-                Get.to(PlayerView());
-              },
-              child: Text("Start Meditation"),
+            Text("Choose your meditation", style: AppTextStyles.heading),
+            const SizedBox(height: 16),
+
+            // — Type selector as a list
+            Text("Type", style: AppTextStyles.lightheading),
+            const SizedBox(height: 8),
+            ParameterDropdown(
+              title: "Category",
+              //leading: Image.asset(PLAYER_ELLIPSE, width: 24, height: 24), // or your meditation icon
+              items: _types,
+              selected: _selectedType,
+              onChanged: (type) => setState(() => _selectedType = type),
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Text(
-                  receivedTranscript.isNotEmpty
-                      ? receivedTranscript
-                      : "No transcript received yet.",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
+
+            const SizedBox(height: 16),
+            Text("Duration (${_selectedDuration.toInt()} min)",
+                style: AppTextStyles.lightheading),
+            Slider(
+              min: 1,
+              max: 60,
+              divisions: 59,
+              value: _selectedDuration,
+              label: "${_selectedDuration.toInt()}",
+              onChanged: (v) => setState(() => _selectedDuration = v),
+              activeColor: appPrimary,
+              inactiveColor: appTertiary.withOpacity(0.3),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                Get.to(PlayerView());
-                if (isPlaying) {
-                  await MyAudioHandler().pause();
-                } else {
-                  await MyAudioHandler().play();
-                }
-              },
-              child: Text(isPlaying ? "Pause" : "Play"),
-            )
+
+            const SizedBox(height: 24),
+            SizedBox(
+                width: double.infinity,
+                child: CustomBlueButton(
+                    text: "Start Meditation",
+                    onPressed: () {
+                      // Send to backend + navigate
+                      sessionController.startSession(
+                        _selectedType,
+                        _selectedDuration.toInt(),
+                      );
+                      Get.to(() => const PlayerView());
+                    })),
           ],
         ),
       ),
