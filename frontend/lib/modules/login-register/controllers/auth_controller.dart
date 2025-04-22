@@ -41,18 +41,24 @@ class AuthController extends GetxController {
   Future<void> login(String email, String password) async {
     isLoading.value = true;
 
-    final success = await AuthService.login(email, password);
+    final response = await AuthService.login(email, password);
 
     isLoading.value = false;
 
-    if (success) {
-      final token = await AuthService.getAccessToken();
-      accessToken.value = token ?? '';
+    if (response != null) {
+      accessToken.value = response.accessToken;
+      refreshToken.value = response.refreshToken;
+      currentUser = response.user;
       isLoggedIn.value = true;
-      //currentUser = user;
+      update();
+
+      print(currentUser?.firstName ?? "nul123");
+
+      await UserStorage.saveUserLocally(currentUser!);
+
       Get.offAll(() => const BaseView());
     } else {
-      Get.snackbar("Login Failed", "An error occured.");
+      Get.snackbar("Login Failed", "Invalid credentials or server error.");
     }
   }
 
@@ -68,11 +74,14 @@ class AuthController extends GetxController {
   Future<void> tryAutoLogin() async {
     final token = await AuthService.getAccessToken();
     if (token != null && !JwtDecoder.isExpired(token)) {
-      final decoded = JwtDecoder.decode(token);
-      print("Logged in as user ID: ${decoded['user_id']}");
       isLoggedIn.value = true;
+      accessToken.value = token;
+      //refreshToken.value = await AuthService.getRefreshToken();
+
+      // ← Load the saved user model
+      currentUser = await UserStorage.getUserFromStorage();
     } else {
-      await logout(); // Clean up if token is invalid/expired
+      //await logout();
     }
   }
 }

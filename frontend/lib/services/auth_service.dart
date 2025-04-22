@@ -44,7 +44,7 @@ class AuthService {
     return null;
   }
 
-  static Future<bool> login(String email, String password) async {
+  static Future<AuthResponse?> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/token/'),
       headers: {'Content-Type': 'application/json'},
@@ -52,14 +52,24 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      final tokens = jsonDecode(response.body);
-      await _storage.write(key: 'access', value: tokens['access']);
-      await _storage.write(key: 'refresh', value: tokens['refresh']);
-      print('Login success: ${response.body}');
-      return true;
+      final decoded = jsonDecode(response.body);
+      final user = UserModel.fromJson(decoded['user']);
+      final access = decoded['access'];
+      final refresh = decoded['refresh'];
+
+      await _storage.write(key: 'access', value: access);
+      await _storage.write(key: 'refresh', value: refresh);
+
+      print('Login success: $decoded');
+
+      return AuthResponse(
+        user: user,
+        accessToken: access,
+        refreshToken: refresh,
+      );
     }
 
-    return false;
+    return null;
   }
 
   static Future<void> logout() async {
