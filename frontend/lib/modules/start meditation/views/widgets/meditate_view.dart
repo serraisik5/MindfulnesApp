@@ -40,7 +40,7 @@ class _MeditateViewState extends State<MeditateView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Choose your meditation", style: AppTextStyles.heading),
+            Text("Choose a topic to focuse on", style: AppTextStyles.heading),
             const SizedBox(height: 16),
 
             // — Type selector as a list
@@ -54,7 +54,7 @@ class _MeditateViewState extends State<MeditateView> {
               onChanged: (type) => setState(() => _selectedType = type),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 48),
             Text("Duration (${_selectedDuration.toInt()} min)",
                 style: AppTextStyles.lightheading),
             Slider(

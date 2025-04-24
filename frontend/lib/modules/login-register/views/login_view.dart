@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
-import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
