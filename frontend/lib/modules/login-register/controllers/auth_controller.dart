@@ -29,6 +29,7 @@ class AuthController extends GetxController {
       refreshToken.value = response.refreshToken;
       currentUser = response.user;
       isLoggedIn.value = true;
+      update();
 
       await UserStorage.saveUserLocally(currentUser!);
 
