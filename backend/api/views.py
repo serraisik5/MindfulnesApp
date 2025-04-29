@@ -120,6 +120,26 @@ def add_favorite(request):
     favorite, created = FavoriteSession.objects.get_or_create(user=request.user, session=session)
     return Response({"status": "favorited", "created": created})
 
+#Delete the session from favorites for user
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def remove_favorite(request):
+    session_id = request.data.get("session_id")
+    if not session_id:
+        return Response({"error": "session_id is required"}, status=400)
+
+    try:
+        session = MeditationSession.objects.get(id=session_id, user=request.user)
+    except MeditationSession.DoesNotExist:
+        return Response({"error": "Session not found or does not belong to user"}, status=404)
+
+    try:
+        favorite = FavoriteSession.objects.get(user=request.user, session=session)
+        favorite.delete()
+        return Response({"status": "removed from favorites"}, status=200)
+    except FavoriteSession.DoesNotExist:
+        return Response({"error": "Session is not in favorites"}, status=404)
+
 # List her favourites
 class FavoriteSessionListView(generics.ListAPIView):
     serializer_class = MeditationSessionSerializer
