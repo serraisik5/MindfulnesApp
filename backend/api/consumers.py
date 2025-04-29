@@ -81,3 +81,4 @@ class MeditationConsumer(AsyncWebsocketConsumer):
         logger.info(f"🔌 WebSocket disconnected with code: {close_code}")
         transcript_length = len(self.full_transcript.strip())
         logger.info(f"📝 Final transcript length: {transcript_length}")
+        

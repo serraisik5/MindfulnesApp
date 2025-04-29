@@ -68,7 +68,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
                     "content": [
                         {
                             "type": "input_text",
-                            "text": f"Create a {duration}-minute meditation session on {title}."
+                            "text": f"Create a {duration}-minute meditation session on {title} and on this duration: {duration}."
                         }
                     ]
                 }

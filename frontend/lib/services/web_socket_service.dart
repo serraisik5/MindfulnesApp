@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:async';
+import 'package:minder_frontend/services/auth_service.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
@@ -13,10 +16,23 @@ class WebSocketService {
 
   bool _isConnected = false;
 
-  void connect() {
+  Future<void> connect() async {
     if (_isConnected) return;
 
-    _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
+    final token = await AuthService.getAccessToken();
+
+    // 2️⃣ build headers for the handshake
+    final headers = <String, dynamic>{};
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    final socket = await WebSocket.connect(
+      wsUrl,
+      headers: headers,
+    );
+    _channel = IOWebSocketChannel(socket);
+
     _isConnected = true;
 
     _channel!.stream.listen((message) {
@@ -32,8 +48,9 @@ class WebSocketService {
     });
   }
 
-  void sendMeditationRequest(String title, int duration) {
-    connect(); // ensure connected
+  /// ② Now await the connection before sending your payload.
+  Future<void> sendMeditationRequest(String title, int duration) async {
+    await connect();
     final request = jsonEncode({
       "title": title,
       "duration": duration,

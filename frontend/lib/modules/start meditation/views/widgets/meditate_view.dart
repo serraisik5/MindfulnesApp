@@ -59,8 +59,8 @@ class _MeditateViewState extends State<MeditateView> {
                 style: AppTextStyles.lightheading),
             Slider(
               min: 1,
-              max: 60,
-              divisions: 59,
+              max: 5,
+              divisions: 5,
               value: _selectedDuration,
               label: "${_selectedDuration.toInt()}",
               onChanged: (v) => setState(() => _selectedDuration = v),
@@ -73,9 +73,9 @@ class _MeditateViewState extends State<MeditateView> {
                 width: double.infinity,
                 child: CustomBlueButton(
                     text: "Start Meditation",
-                    onPressed: () {
+                    onPressed: () async {
                       // Send to backend + navigate
-                      sessionController.startSession(
+                      await sessionController.startSession(
                         _selectedType,
                         _selectedDuration.toInt(),
                       );

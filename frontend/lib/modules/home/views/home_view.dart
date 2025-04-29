@@ -36,7 +36,7 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Good Morning, $name",
+              "Good Morning, ${name.capitalizeFirst}",
               style: AppTextStyles.heading,
             ),
             SizedBox(height: 10),
@@ -44,7 +44,11 @@ class _HomeViewState extends State<HomeView> {
               "We wish you have a good day",
               style: AppTextStyles.lightheading,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 32),
+            Text(
+              "Your favorite sessions will be displayed here",
+              style: AppTextStyles.lightheading,
+            ),
           ],
         ),
       ),
