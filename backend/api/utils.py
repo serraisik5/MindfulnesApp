@@ -116,7 +116,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
             # Save audio to DB
             if hasattr(user_channel, "audio_buffer"):
                 user_channel.audio_buffer.seek(0)
-                await save_meditation_session_with_audio(
+                session = await save_meditation_session_with_audio(
                     user=user_channel.user if not user_channel.user.is_anonymous else None,
                     title=title,
                     duration=duration,
@@ -125,6 +125,21 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
                     voice=voice,
                     audio_data=user_channel.audio_buffer.read()
                 )
+
+                # ✅ Send session metadata to client
+                await user_channel.send(json.dumps({
+                    "type": "session_complete",
+                    "session": {
+                        "id": session.id,
+                        "user_id": session.user.id if session.user else None,
+                        "title": session.title,
+                        "duration": session.duration,
+                        "voice": session.voice,
+                        "background_noise": session.background_noise,
+                        "text": session.text,
+                        "audio_url": session.audio_file.url,
+                    }
+                }))
             await user_channel.close()
             logger.info("🔌 WebSocket closed manually after streaming ended.")
 
@@ -161,4 +176,5 @@ def save_meditation_session_with_audio(user, title, duration, text, background_n
     wav_file = wrap_pcm_to_wav(audio_data)
     session.audio_file.save(f"{session.id}_audio.wav", ContentFile(wav_file.read()))
     session.save()
+    return session
 
