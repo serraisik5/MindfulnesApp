@@ -4,6 +4,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/modules/start%20meditation/widgets/audio_seek_bar.dart';
 import 'package:minder_frontend/widgets/buttons/close_button.dart';
 import 'package:minder_frontend/widgets/buttons/favorite_button.dart';
@@ -18,6 +19,7 @@ class PlayerView extends StatefulWidget {
 
 class _PlayerViewState extends State<PlayerView> {
   final favCtl = Get.put(FavoriteController());
+  final sessionCtl = Get.find<MeditationSessionController>();
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +72,14 @@ class _PlayerViewState extends State<PlayerView> {
                   children: [
                     Row(
                       children: [
-                        CustomFavoriteButton(
-                          size: 40,
-                          iconColor:
-                              favCtl.isFav(1) ? Colors.red : Colors.black,
-                          onPressed: () => favCtl.toggle(1),
-                        ),
+                        Obx(() => CustomFavoriteButton(
+                              iconColor: favCtl.isFav(
+                                      sessionCtl.currentSession.value?.id ?? 0)
+                                  ? Colors.red
+                                  : appTertiary,
+                              onPressed: () => favCtl
+                                  .toggle(sessionCtl.currentSession.value),
+                            )),
                         SizedBox(
                           width: 250,
                         ),

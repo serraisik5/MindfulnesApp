@@ -8,6 +8,7 @@ import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/login_view.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 
 MyAudioHandler myAudioHandler = MyAudioHandler();

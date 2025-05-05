@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:logger/logger.dart';
 
 class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   static final MyAudioHandler _instance = MyAudioHandler._internal();
@@ -13,7 +14,9 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     _initializePlayer();
   }
 
-  final FlutterSoundPlayer audioPlayer = FlutterSoundPlayer();
+  final FlutterSoundPlayer audioPlayer =
+      FlutterSoundPlayer(logLevel: Level.error);
+
   bool isPlaying = false;
   bool isCompleted = false;
 
@@ -64,7 +67,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   void addStream(Uint8List stream) {
     if (audioPlayer.foodSink != null) {
       audioPlayer.foodSink?.add(FoodData(stream));
-      print("food added");
+      log("food added");
     } else {
       print("Error: foodSink is null. Ensure player is initialized.");
     }
@@ -88,7 +91,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           codec: Codec.pcm16,
           sampleRate: 24000,
           numChannels: 1,
-          interleaved: true, 
+          interleaved: true,
           bufferSize: 4096,
           onBufferUnderlow: () {
             isPlaying = false;

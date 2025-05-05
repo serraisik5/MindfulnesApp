@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:get/get.dart';
+import 'package:minder_frontend/models/meditation_session_model.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 import 'package:minder_frontend/services/web_socket_service.dart';
@@ -11,6 +12,9 @@ class MeditationSessionController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool hasStartedPlayer = false.obs;
   final List<Uint8List> _bufferedChunks = [];
+
+  final Rxn<MeditationSessionModel> currentSession =
+      Rxn<MeditationSessionModel>();
 
   @override
   void onInit() {
@@ -23,12 +27,22 @@ class MeditationSessionController extends GetxController {
       if (message is String) {
         final data = jsonDecode(message);
 
-        if (data['type'] == 'text') {
-          transcript.value += '${data['content']}\n';
-        } else if (data['type'] == 'audio' && data['content'] != null) {
-          final audioBytes = base64Decode(data['content']);
+        switch (data['type']) {
+          case 'text':
+            transcript.value += '${data['content']}\n';
+            break;
 
-          _handleAudio(audioBytes);
+          case 'audio':
+            final audioBytes = base64Decode(data['content']);
+            _handleAudio(audioBytes);
+            break;
+
+          case 'session_complete':
+            // parse and store the session object
+            final sessionJson = data['session'] as Map<String, dynamic>;
+            currentSession.value = MeditationSessionModel.fromJson(sessionJson);
+            isLoading.value = false;
+            break;
         }
       } else if (message is Uint8List) {
         _handleAudio(message);

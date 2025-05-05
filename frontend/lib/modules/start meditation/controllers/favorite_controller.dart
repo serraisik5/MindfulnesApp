@@ -1,31 +1,67 @@
-// lib/modules/start meditation/controllers/favorite_controller.dart
+// lib/modules/start_meditation/controllers/favorite_controller.dart
+
 import 'package:get/get.dart';
+import 'package:minder_frontend/models/meditation_session_model.dart';
 import 'package:minder_frontend/services/favorite_service.dart';
 
 class FavoriteController extends GetxController {
-  final favorites = <int>{}.obs; // set of session IDs
+  /// Reactive list of favorited sessions
+  final favorites = <MeditationSessionModel>[].obs;
 
-  /// Toggle: if not in favorites, call API and add; otherwise remove locally.
-  Future<void> toggle(int sessionId) async {
-    if (favorites.contains(sessionId)) {
-      // optional: call an API to remove favorite if you have one
-      favorites.remove(sessionId);
-    } else {
-      try {
-        final created = await FavoriteService.addFavorite(sessionId);
-        if (created) {
-          favorites.add(sessionId);
-          Get.snackbar('Favorited', 'Session added to favorites');
-        } else {
-          favorites.add(sessionId);
-          Get.snackbar('Already favorited',
-              'This session was already in your favorites');
-        }
-      } catch (e) {
-        Get.snackbar('Error', 'Could not add favorite');
-      }
+  /// Loading / error states for the list fetch
+  final isLoading = false.obs;
+  final errorMessage = RxnString();
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadFavorites();
+  }
+
+  /// Loads the user’s favorite sessions from the backend
+  Future<void> loadFavorites() async {
+    try {
+      print("selen123");
+      isLoading.value = true;
+      errorMessage.value = null;
+      final list = await FavoriteService.fetchFavorites();
+      print("selen1");
+      favorites.value = list;
+      print(list);
+    } catch (e) {
+      errorMessage.value = e.toString();
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  bool isFav(int sessionId) => favorites.contains(sessionId);
+  /// Returns true if the given session ID is currently in favorites
+  bool isFav(int sessionId) {
+    return favorites.any((s) => s.id == sessionId);
+  }
+
+  /// Toggles favorite status for a session. If it’s already favorited,
+  /// calls removeFavorite, otherwise calls addFavorite. Then updates `favorites`.
+  Future<void> toggle(MeditationSessionModel? session) async {
+    print(session);
+    if (session != null) {
+      final already = isFav(session.id);
+
+      try {
+        if (already) {
+          await FavoriteService.removeFavorite(session.id);
+          favorites.removeWhere((s) => s.id == session.id);
+          Get.snackbar("Removed", "Session removed from favorites");
+        } else {
+          print("selen false");
+          await FavoriteService.addFavorite(session.id);
+          favorites.add(session);
+          Get.snackbar("Favorited", "Session added to favorites");
+        }
+      } catch (e) {
+        Get.snackbar(
+            "Error", "Could not ${already ? 'remove' : 'add'} favorite");
+      }
+    }
+  }
 }
