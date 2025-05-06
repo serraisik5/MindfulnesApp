@@ -42,6 +42,7 @@ class MeditationSessionController extends GetxController {
             final sessionJson = data['session'] as Map<String, dynamic>;
             currentSession.value = MeditationSessionModel.fromJson(sessionJson);
             isLoading.value = false;
+            print("Selen selennn " + sessionJson.toString());
             break;
         }
       } else if (message is Uint8List) {

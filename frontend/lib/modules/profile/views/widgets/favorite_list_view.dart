@@ -41,7 +41,7 @@ class FavoriteListSection extends StatelessWidget {
             ),
             trailing: Icon(Icons.play_arrow),
             onTap: () {
-              if (s.audioFile?.isNotEmpty == true) {
+              if (s.audioUrl?.isNotEmpty == true) {
                 // navigate to your player, passing s.audioFile
               }
             },

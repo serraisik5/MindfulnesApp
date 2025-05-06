@@ -41,9 +41,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Mindfulness',
-      home: LoginView(),
-    );
+    final authController = Get.find<AuthController>();
+    return Obx(() {
+      return GetMaterialApp(
+        title: 'Mindfulness',
+        // pick the right initial screen
+        home: authController.isLoggedIn.value ? BaseView() : LoginView(),
+      );
+    });
   }
 }
