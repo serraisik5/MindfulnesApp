@@ -129,6 +129,47 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     ));
   }
 
+  Future<void> playFromUrl(String url) async {
+    // 1) Ensure the native player is open
+    if (!audioPlayer.isOpen()) {
+      try {
+        await audioPlayer.openPlayer();
+      } catch (e) {
+        print("Error re-opening player: $e");
+        return;
+      }
+    }
+
+    // 2) Stop any current playback
+    if (isPlaying) {
+      await stop();
+    }
+
+    _emitPlayerState(playing: false, processingState: ProcessingState.loading);
+
+    try {
+      await audioPlayer.startPlayer(
+        fromURI: url,
+        codec: Codec.pcm16WAV, // WAV files usually use this codec
+        whenFinished: () {
+          isPlaying = false;
+          _emitPlayerState(
+            playing: false,
+            processingState: ProcessingState.completed,
+          );
+        },
+      );
+
+      isPlaying = true;
+      _emitPlayerState(playing: true, processingState: ProcessingState.ready);
+      // If you want your seek-bar to update:
+      startPositionUpdates(resetPosition: true);
+    } catch (err) {
+      print("Error playing from URL: $err");
+      _emitPlayerState(playing: false, processingState: ProcessingState.idle);
+    }
+  }
+
   void updateNowPlayingInfo(MediaItem? song) {
     mediaItem.add(song);
 

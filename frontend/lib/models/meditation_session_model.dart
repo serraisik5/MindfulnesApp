@@ -29,7 +29,10 @@ class MeditationSessionModel {
     final backgroundNoise =
         (json['background_noise'] ?? json['backgroundNoise'] ?? '') as String;
     final voice = (json['voice'] ?? '') as String;
-    final audioUrl = (json['audio_url'] ?? json['audioUrl'] ?? '') as String;
+    final audioUrl = (json['audio_file'] ??
+        json['audio_url'] ??
+        json['audioUrl'] ??
+        '') as String;
 
     // parse createdAt if present, otherwise use now()
     final createdAtRaw = json['created_at'] ?? json['createdAt'];

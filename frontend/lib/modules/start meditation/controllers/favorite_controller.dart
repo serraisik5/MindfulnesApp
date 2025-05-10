@@ -21,11 +21,9 @@ class FavoriteController extends GetxController {
   /// Loads the user’s favorite sessions from the backend
   Future<void> loadFavorites() async {
     try {
-      print("selen123");
       isLoading.value = true;
       errorMessage.value = null;
       final list = await FavoriteService.fetchFavorites();
-      print("selen1");
       favorites.value = list;
       print(list);
     } catch (e) {

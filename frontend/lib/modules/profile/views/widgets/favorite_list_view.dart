@@ -1,12 +1,11 @@
 // lib/modules/profile/views/widgets/favorite_list_section.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minder_frontend/helpers/constants/colors.dart';
-import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
+import 'package:minder_frontend/services/audio_service.dart';
 
 class FavoriteListSection extends StatelessWidget {
-  FavoriteListSection({Key? key}) : super(key: key);
+  FavoriteListSection({super.key});
 
   final favCtl = Get.lazyPut<FavoriteController>(
     () => FavoriteController(),
@@ -41,9 +40,13 @@ class FavoriteListSection extends StatelessWidget {
             ),
             trailing: Icon(Icons.play_arrow),
             onTap: () {
-              if (s.audioUrl?.isNotEmpty == true) {
+              if (s.audioUrl.isNotEmpty == true) {
                 // navigate to your player, passing s.audioFile
+                print(s.audioUrl);
+                print("selen isnotepmty");
+                MyAudioHandler().playFromUrl(s.audioUrl);
               }
+              print("selen isepmty");
             },
           );
         },
