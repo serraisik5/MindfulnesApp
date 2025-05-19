@@ -25,8 +25,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final String name = authController.currentUser?.firstName ?? "Guest";
-    print(name);
     return Scaffold(
       backgroundColor: appBackground,
       appBar: CustomAppBar(),
@@ -35,10 +33,15 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Good Morning, ${name.capitalizeFirst}",
-              style: AppTextStyles.heading,
-            ),
+            Obx(() {
+              // reactively re-reads currentUser.firstName
+              final firstName =
+                  authController.currentUser.value?.firstName ?? 'Guest';
+              return Text(
+                'Good Morning, ${firstName.capitalizeFirst}',
+                style: AppTextStyles.heading,
+              );
+            }),
             SizedBox(height: 10),
             Text(
               "We wish you have a good day",

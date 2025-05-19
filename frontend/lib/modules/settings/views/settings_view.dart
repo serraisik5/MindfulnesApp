@@ -1,61 +1,81 @@
+// lib/modules/profile/views/settings_view.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
-import 'package:minder_frontend/modules/profile/views/profile_view.dart';
-import 'package:minder_frontend/modules/settings/controllers/settings_controller.dart';
+import 'package:minder_frontend/modules/profile/controllers/voice_controller.dart';
+import 'package:minder_frontend/modules/settings/views/pages/voice_selection_view.dart';
+import 'package:minder_frontend/services/local_storage.dart';
 
-class SettingsView extends StatefulWidget {
-  const SettingsView({super.key});
+class SettingsView extends StatelessWidget {
+  SettingsView({super.key});
 
-  @override
-  State<SettingsView> createState() => _SettingsViewState();
-}
+  // make sure the VoiceController is in memory
+  final voiceCtl = Get.put(VoiceController());
 
-class _SettingsViewState extends State<SettingsView> {
-  final SettingsController controller = Get.put(SettingsController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Column(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          settingItem("Selen Bilgiç", "Go to your profile", Icon(Icons.person),
-              () => Get.to(ProfileView())),
+          // ─── Language selector ─────────────────────────────────────────
+          GetBuilder<VoiceController>(
+            builder: (_) {
+              final selectedLabel = _.getSelectedVoice()?.label ?? '';
+              return SettingItem(
+                icon: Icons.language,
+                title: "Language",
+                subtitle: selectedLabel,
+                onTap: () => Get.to(() => const VoiceView()),
+              );
+            },
+          ),
+
+          // ─── Voice selector ────────────────────────────────────────────
+          GetBuilder<VoiceController>(
+            builder: (_) {
+              final selectedLabel = _.getSelectedVoice()?.label ?? '';
+              return SettingItem(
+                icon: Icons.record_voice_over,
+                title: "Voice",
+                subtitle: selectedLabel,
+                onTap: () => Get.to(() => const VoiceView()),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-Widget settingItem(String title, String subtitle, Icon icon, Function() onTap) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: EdgeInsets.all(17),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: appPrimary, borderRadius: BorderRadius.circular(18)),
-      child: Row(
-        children: [
-          icon,
-          SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              Text(
-                subtitle,
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+class SettingItem extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const SettingItem({
+    super.key,
+    required this.title,
+    this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: appPrimary),
+      title:
+          Text(title, style: AppTextStyles.button.copyWith(color: appDarkGrey)),
+      subtitle: Text(subtitle ?? "null", style: AppTextStyles.body),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      onTap: onTap,
+      contentPadding: EdgeInsets.zero,
+    );
+  }
 }

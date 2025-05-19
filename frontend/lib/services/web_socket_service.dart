@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:minder_frontend/services/auth_service.dart';
+import 'package:minder_frontend/services/local_storage.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -54,6 +55,7 @@ class WebSocketService {
     final request = jsonEncode({
       "title": title,
       "duration": duration,
+      "voice": LocalStorage.getLocalParameter("voice")
     });
     _channel?.sink.add(request);
   }

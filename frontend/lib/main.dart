@@ -10,12 +10,14 @@ import 'package:minder_frontend/modules/login-register/views/login_view.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
 import 'package:minder_frontend/services/audio_service.dart';
+import 'package:minder_frontend/services/local_storage.dart';
 
 MyAudioHandler myAudioHandler = MyAudioHandler();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authController = Get.put(AuthController(), permanent: true);
   await authController.tryAutoLogin();
+  await LocalStorage.initalizeStorage();
   runApp(const MyApp());
 }
 
@@ -41,12 +43,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final authController = Get.find<AuthController>();
+    final auth = Get.find<AuthController>();
     return Obx(() {
+      // splash / loading
+      if (auth.isLoading.value) {
+        return const MaterialApp(
+          home: Scaffold(body: Center(child: CircularProgressIndicator())),
+        );
+      }
+      // decide initial screen
       return GetMaterialApp(
         title: 'Mindfulness',
-        // pick the right initial screen
-        home: authController.isLoggedIn.value ? BaseView() : LoginView(),
+        home: auth.isLoggedIn.value ? const BaseView() : LoginView(),
       );
     });
   }

@@ -5,6 +5,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/profile/views/widgets/favorite_list_view.dart';
+import 'package:minder_frontend/modules/settings/views/settings_view.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class ProfileView extends StatefulWidget {
@@ -38,8 +39,11 @@ class _ProfileViewState extends State<ProfileView>
             SizedBox(
               height: 20,
             ),
-            Text(_authCtrl.currentUser?.firstName.capitalizeFirst ?? "",
-                style: AppTextStyles.heading),
+            Obx(() {
+              final name = _authCtrl.currentUser.value?.firstName ?? "Guest";
+              return Text(name.capitalizeFirst ?? "Guest",
+                  style: AppTextStyles.heading);
+            }),
             SizedBox(
               height: 20,
             ),
@@ -67,17 +71,23 @@ class _ProfileViewState extends State<ProfileView>
                 controller: _tabController,
                 children: [
                   FavoriteListSection(),
-                  const Center(child: Text("Settings Content")),
+                  SettingsView(),
                 ],
               ),
             ),
             //Expanded(child: FavoriteListSection()),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              icon: const Icon(Icons.logout),
-              label: const Text("Logout"),
+              icon: const Icon(
+                Icons.logout,
+                color: appBackground,
+              ),
+              label: const Text(
+                "Logout",
+                style: AppTextStyles.button,
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
+                backgroundColor: appPrimary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
