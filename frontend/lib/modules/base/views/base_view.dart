@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/favorites/views/favorites_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/profile/views/profile_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/start_meditation_view.dart';
+import 'package:minder_frontend/services/audio_service.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
@@ -31,9 +35,17 @@ class _BaseViewState extends State<BaseView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: _screens,
+      body: Column(
+        children: [
+          Expanded(
+            child: IndexedStack(
+              index: selectedIndex,
+              children: _screens,
+            ),
+          ),
+          // our new mini-player
+          const PlayerBar(),
+        ],
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -79,5 +91,61 @@ class _BaseViewState extends State<BaseView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+}
+
+class PlayerBar extends StatelessWidget {
+  const PlayerBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final sessionCtl = Get.find<MeditationSessionController>();
+    final audioHandler = MyAudioHandler();
+
+    return Obx(() {
+      // show only a thin bar always; you can hide if no session.start
+      final title = sessionCtl.currentSession.value?.title ?? 'Nothing playing';
+      return GestureDetector(
+        onTap: () => Get.to(() => const PlayerView()),
+        child: Container(
+          color: appSecondary,
+          height: 60,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              // Title
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.body.copyWith(color: appPrimary),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // play/pause button
+              StreamBuilder<MyPlayerState>(
+                stream: audioHandler.playerStateStream,
+                initialData: MyPlayerState(
+                    playing: false, processingState: ProcessingState.idle),
+                builder: (context, snap) {
+                  final playing = snap.data?.playing ?? false;
+                  if (playing) {
+                    return IconButton(
+                      icon: Icon(Icons.pause, color: appPrimary),
+                      onPressed: () => audioHandler.pause(),
+                    );
+                  } else {
+                    return IconButton(
+                      icon: Icon(Icons.play_arrow, color: appPrimary),
+                      onPressed: () => audioHandler.play(),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
