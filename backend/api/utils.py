@@ -26,7 +26,7 @@ if OPENAI_API_KEY:
 else:
     logger.error("OPENAI_API_KEY is missing or not set!")
 
-async def generate_meditation_ws(title, duration, voice, user_channel):
+async def generate_meditation_ws(title, duration, voice, user_channel,how_you_feel=""):
     """Connects to OpenAI WebSocket and streams meditation session to user WebSocket."""
     logger.info(f"Selected voice: {voice}")
     
@@ -45,6 +45,36 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
     try:
         async with connect(OPENAI_REALTIME_WS_URL, extra_headers=headers) as ws:
             logger.info("✅ Successfully connected to OpenAI WebSocket")
+
+            if how_you_feel:
+                summary_prompt = [
+                    {
+                        "type": "input_text",
+                        "text": f"Summarize the following mood description in two sentences (reason & goal/suggestion) for a meditation context: '{how_you_feel}'"
+                    }
+                ]
+                summary_event = {
+                        "type": "conversation.item.create",
+                        "item": {
+                            "type": "message",
+                            "role": "user",
+                            "content": summary_prompt
+                        }
+                    }         
+                await ws.send(json.dumps(summary_event))
+                await ws.send(json.dumps({"type": "response.create", "response": {"modalities": ["text"]}}))
+                logger.info("🔹 Sent feeling summary request")
+
+                feeling_summary = ""
+                async for message in ws:
+                    data = json.loads(message)
+                    if data.get("type") == "response.content_part.done":
+                        feeling_summary = data.get("part", {}).get("transcript", "").strip()
+                    if data.get("type") == "response.done":
+                        break
+            else:
+                feeling_summary = None
+
             
             # Step 1: Start the session
             session_event = {
@@ -68,7 +98,8 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
                     "content": [
                         {
                             "type": "input_text",
-                            "text": f"Create a {duration}-minute meditation session on {title} and on this duration: {duration}."
+                            "text": f"Create a {duration}-minute meditation session on {title} and on this duration: {duration} "
+                            f"considering the user is feeling: '{feeling_summary}'."
                         }
                     ]
                 }
@@ -123,7 +154,8 @@ async def generate_meditation_ws(title, duration, voice, user_channel):
                     text=user_channel.transcript_collected.strip(),
                     background_noise=user_channel.background_noise,
                     voice=voice,
-                    audio_data=user_channel.audio_buffer.read()
+                    audio_data=user_channel.audio_buffer.read(),
+                    user_feeling_summary=feeling_summary
                 )
 
                 # ✅ Send session metadata to client
@@ -162,15 +194,15 @@ def wrap_pcm_to_wav(pcm_data, sample_rate=24000, channels=1, sample_width=2):
     return buffer
 
 @sync_to_async
-def save_meditation_session_with_audio(user, title, duration, text, background_noise, voice, audio_data):
+def save_meditation_session_with_audio(user, title, duration, text, background_noise, voice, audio_data, user_feeling_summary):
     session = MeditationSession.objects.create(
         user=user,
         title=title,
         duration=duration,
         text=text,
         background_noise=background_noise,
-        voice=voice
-    )
+        voice=voice,
+        user_feeling_summary=user_feeling_summary)
 
     # Convert raw PCM to WAV
     wav_file = wrap_pcm_to_wav(audio_data)

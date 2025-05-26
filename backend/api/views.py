@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import CustomUser, MeditationSession, FavoriteSession
-from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer, CustomTokenObtainPairSerializer
+from .models import CustomUser, MeditationSession, FavoriteSession, UserJournal
+from .serializers import CustomUserSerializer, MeditationSessionSerializer, FavoriteSessionSerializer, CustomTokenObtainPairSerializer, UserJournalSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
@@ -148,4 +148,23 @@ class FavoriteSessionListView(generics.ListAPIView):
     def get_queryset(self):
         return MeditationSession.objects.filter(favoritesession__user=self.request.user)
 
+class JournalEntryCreateView(generics.CreateAPIView):
+    serializer_class = UserJournalSerializer
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class JournalEntryListView(generics.ListAPIView):
+    serializer_class = UserJournalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserJournal.objects.filter(user=self.request.user).order_by("-created_at")
+    
+class JournalEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserJournalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserJournal.objects.filter(user=self.request.user)

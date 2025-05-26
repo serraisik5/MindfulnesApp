@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, MeditationSession, FavoriteSession
+from .models import CustomUser, MeditationSession, FavoriteSession, UserJournal
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
@@ -53,6 +53,7 @@ class MeditationSessionSerializer(serializers.ModelSerializer):
             "duration",
             "background_noise",
             "voice",
+            "user_feeling_summary",
             "created_at",
             "audio_file"
         ]
@@ -64,7 +65,6 @@ class FavoriteSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteSession
         fields = ["id", "user", "session", "saved_at"]
-
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -83,3 +83,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             "first_name": self.user.first_name,
         }
         return data
+    
+class UserJournalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserJournal
+        fields = ["id", "user", "entry", "created_at", "updated_at"]
+        read_only_fields = ["id", "user", "created_at", "updated_at"]

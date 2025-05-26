@@ -64,7 +64,8 @@ class MeditationSession(models.Model):
     background_noise = models.CharField(max_length=50, choices=[("rainy", "Rainy"), ("piano", "Piano"), ("fire", "Fire")], default="rainy")
     voice = models.CharField(max_length=20, choices=VOICE_CHOICES, default="sage")
     created_at = models.DateTimeField(auto_now_add=True)
-    audio_file = models.FileField(upload_to='sessions/audio/', null=True, blank=True) # to save favourites
+    audio_file = models.FileField(upload_to='sessions/audio/', null=True, blank=True), # to save favourites
+    user_feeling_summary = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} ({self.user.username if self.user else 'Anonymous'})"
@@ -79,3 +80,12 @@ class FavoriteSession(models.Model):
         unique_together = ('user', 'session')
     def __str__(self):
         return f"{self.user.username} - {self.session.title} (Favorite)"
+
+class UserJournal(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    entry = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Journal Entry by {self.user.email} on {self.created_at.date()} (Updated: {self.updated_at.date()})"

@@ -58,6 +58,8 @@ class MeditationConsumer(AsyncWebsocketConsumer):
             self.background_noise = data.get("background_noise", "rainy").lower()
             self.voice = data.get("voice", "sage").lower()
 
+            self.raw_feeling_input = data.get("how_you_feel", "")
+
             if self.background_noise not in ["rainy", "piano", "fire"]:
                 raise ValueError("Invalid background_noise option")
             if self.duration <= 0:
@@ -65,7 +67,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
 
             logger.info(f"🔹 Title: {self.title}, Duration: {self.duration}, Noise: {self.background_noise}, Voice: {self.voice}")
 
-            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self))
+            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self.raw_feeling_input, self))
 
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Invalid request: {e}")
