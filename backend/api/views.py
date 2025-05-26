@@ -165,6 +165,9 @@ class JournalEntryListView(generics.ListAPIView):
 class JournalEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserJournalSerializer
     permission_classes = [IsAuthenticated]
+    
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
 
     def get_queryset(self):
         return UserJournal.objects.filter(user=self.request.user)

@@ -53,7 +53,6 @@ class MeditationSessionSerializer(serializers.ModelSerializer):
             "duration",
             "background_noise",
             "voice",
-            "user_feeling_summary",
             "created_at",
             "audio_file"
         ]

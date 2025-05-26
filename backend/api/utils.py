@@ -154,8 +154,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
                     text=user_channel.transcript_collected.strip(),
                     background_noise=user_channel.background_noise,
                     voice=voice,
-                    audio_data=user_channel.audio_buffer.read(),
-                    user_feeling_summary=feeling_summary
+                    audio_data=user_channel.audio_buffer.read()
                 )
 
                 # ✅ Send session metadata to client
@@ -194,7 +193,7 @@ def wrap_pcm_to_wav(pcm_data, sample_rate=24000, channels=1, sample_width=2):
     return buffer
 
 @sync_to_async
-def save_meditation_session_with_audio(user, title, duration, text, background_noise, voice, audio_data, user_feeling_summary):
+def save_meditation_session_with_audio(user, title, duration, text, background_noise, voice, audio_data):
     session = MeditationSession.objects.create(
         user=user,
         title=title,
@@ -202,7 +201,7 @@ def save_meditation_session_with_audio(user, title, duration, text, background_n
         text=text,
         background_noise=background_noise,
         voice=voice,
-        user_feeling_summary=user_feeling_summary)
+        )
 
     # Convert raw PCM to WAV
     wav_file = wrap_pcm_to_wav(audio_data)

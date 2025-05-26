@@ -64,8 +64,7 @@ class MeditationSession(models.Model):
     background_noise = models.CharField(max_length=50, choices=[("rainy", "Rainy"), ("piano", "Piano"), ("fire", "Fire")], default="rainy")
     voice = models.CharField(max_length=20, choices=VOICE_CHOICES, default="sage")
     created_at = models.DateTimeField(auto_now_add=True)
-    audio_file = models.FileField(upload_to='sessions/audio/', null=True, blank=True), # to save favourites
-    user_feeling_summary = models.TextField(blank=True, null=True)
+    audio_file = models.FileField(upload_to='sessions/audio/', null=True, blank=True) # to save favourites
 
     def __str__(self):
         return f"{self.title} ({self.user.username if self.user else 'Anonymous'})"
