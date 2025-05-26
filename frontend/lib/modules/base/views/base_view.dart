@@ -117,7 +117,7 @@ class PlayerBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: AppTextStyles.body.copyWith(color: appPrimary),
+                  style: AppTextStyles.body.copyWith(color: appDarkGrey),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

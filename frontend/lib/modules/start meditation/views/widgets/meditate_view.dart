@@ -35,7 +35,7 @@ class _MeditateViewState extends State<MeditateView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBackground,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
