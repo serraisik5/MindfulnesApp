@@ -71,12 +71,12 @@ class MeditationSessionController extends GetxController {
     }
   }
 
-  Future<void> startSession(String title, int duration) async {
+  Future<void> startSession(String title, int duration, String feeling) async {
     disposeSession();
     MyAudioHandler().resetFoodSink();
     MyAudioHandler().startPlayer(song: null);
     isLoading.value = true;
-    await webSocketService.sendMeditationRequest(title, duration);
+    await webSocketService.sendMeditationRequest(title, duration, feeling);
     Get.to(() => const PlayerView());
   }
 

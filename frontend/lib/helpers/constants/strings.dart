@@ -8,7 +8,7 @@ String get PASSWORD => "Password";
 String get DONT_HAVE_ACCOUNT => "Don't have an account?";
 String get CREATE_YOUR_ACCOUNT => "Create your account";
 String get NAME => "Name";
-String get MEDITATE => "MEDIDATE";
+String get MEDITATE => "MEDITATE";
 String get JOURNAL => "JOURNAL";
 
 //BUTTONS

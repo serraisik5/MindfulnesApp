@@ -46,34 +46,34 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
         async with connect(OPENAI_REALTIME_WS_URL, extra_headers=headers) as ws:
             logger.info("✅ Successfully connected to OpenAI WebSocket")
 
-            if how_you_feel:
-                summary_prompt = [
-                    {
-                        "type": "input_text",
-                        "text": f"Summarize the following mood description in two sentences (reason & goal/suggestion) for a meditation context: '{how_you_feel}'"
-                    }
-                ]
-                summary_event = {
-                        "type": "conversation.item.create",
-                        "item": {
-                            "type": "message",
-                            "role": "user",
-                            "content": summary_prompt
-                        }
-                    }         
-                await ws.send(json.dumps(summary_event))
-                await ws.send(json.dumps({"type": "response.create", "response": {"modalities": ["text"]}}))
-                logger.info("🔹 Sent feeling summary request")
+            # if how_you_feel:
+            #     summary_prompt = [
+            #         {
+            #             "type": "input_text",
+            #             "text": f"Summarize the following mood description in two sentences (reason & goal/suggestion) for a meditation context: '{how_you_feel}'"
+            #         }
+            #     ]
+            #     summary_event = {
+            #             "type": "conversation.item.create",
+            #             "item": {
+            #                 "type": "message",
+            #                 "role": "user",
+            #                 "content": summary_prompt
+            #             }
+            #         }         
+            #     await ws.send(json.dumps(summary_event))
+            #     await ws.send(json.dumps({"type": "response.create", "response": {"modalities": ["text"]}}))
+            #     logger.info("🔹 Sent feeling summary request")
 
-                feeling_summary = ""
-                async for message in ws:
-                    data = json.loads(message)
-                    if data.get("type") == "response.content_part.done":
-                        feeling_summary = data.get("part", {}).get("transcript", "").strip()
-                    if data.get("type") == "response.done":
-                        break
-            else:
-                feeling_summary = None
+            #     feeling_summary = ""
+            #     async for message in ws:
+            #         data = json.loads(message)
+            #         if data.get("type") == "response.content_part.done":
+            #             feeling_summary = data.get("part", {}).get("transcript", "").strip()
+            #         if data.get("type") == "response.done":
+            #             break
+            # else:
+            #     feeling_summary = None
 
             
             # Step 1: Start the session
@@ -99,7 +99,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
                         {
                             "type": "input_text",
                             "text": f"Create a {duration}-minute meditation session on {title} and on this duration: {duration} "
-                            f"considering the user is feeling: '{feeling_summary}'."
+                            f"considering the user is feeling: '{how_you_feel}'."
                         }
                     ]
                 }

@@ -50,12 +50,14 @@ class WebSocketService {
   }
 
   /// ② Now await the connection before sending your payload.
-  Future<void> sendMeditationRequest(String title, int duration) async {
+  Future<void> sendMeditationRequest(
+      String title, int duration, String feeling) async {
     await connect();
     final request = jsonEncode({
       "title": title,
       "duration": duration,
-      "voice": LocalStorage.getLocalParameter("voice")
+      "voice": LocalStorage.getLocalParameter("voice"),
+      "how_you_feel": feeling
     });
     _channel?.sink.add(request);
   }

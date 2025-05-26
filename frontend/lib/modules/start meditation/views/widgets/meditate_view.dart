@@ -31,6 +31,14 @@ class _MeditateViewState extends State<MeditateView> {
   String _selectedType = "Relaxation";
   double _selectedDuration = 5; // in minutes
 
+  final TextEditingController _feelingController = TextEditingController();
+
+  @override
+  void dispose() {
+    _feelingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +76,24 @@ class _MeditateViewState extends State<MeditateView> {
               inactiveColor: appTertiary.withOpacity(0.3),
             ),
 
+            const SizedBox(height: 16),
+
+            Text("How are you feeling?", style: AppTextStyles.lightheading),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _feelingController,
+              decoration: InputDecoration(
+                hintText: "I am feeling …",
+                hintStyle: AppTextStyles.lightheading,
+                filled: true,
+                fillColor: appTertiary.withOpacity(0.1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
             SizedBox(
                 width: double.infinity,
@@ -78,6 +104,7 @@ class _MeditateViewState extends State<MeditateView> {
                       await sessionController.startSession(
                         _selectedType,
                         _selectedDuration.toInt(),
+                        _feelingController.text,
                       );
                       Get.to(() => const PlayerView());
                     })),

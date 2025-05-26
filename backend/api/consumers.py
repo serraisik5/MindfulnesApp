@@ -67,7 +67,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
 
             logger.info(f"🔹 Title: {self.title}, Duration: {self.duration}, Noise: {self.background_noise}, Voice: {self.voice}")
 
-            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self.raw_feeling_input, self))
+            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self, self.raw_feeling_input))
 
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Invalid request: {e}")
