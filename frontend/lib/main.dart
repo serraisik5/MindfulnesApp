@@ -9,12 +9,14 @@ import 'package:minder_frontend/modules/login-register/controllers/auth_controll
 import 'package:minder_frontend/modules/login-register/views/login_view.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 import 'package:minder_frontend/services/local_storage.dart';
 
 MyAudioHandler myAudioHandler = MyAudioHandler();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Get.put(MeditationSessionController(), permanent: true);
   final authController = Get.put(AuthController(), permanent: true);
   await authController.tryAutoLogin();
   await LocalStorage.initalizeStorage();
