@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserCreateView, UserDetailView, SessionListView, SessionListByUserIdView, user_audio_sessions, session_audio_by_id, add_favorite, remove_favorite, FavoriteSessionListView, UserUpdateView, PublicUserListView
+from .views import UserCreateView, UserDetailView, SessionListView, SessionListByUserIdView, JournalEntryCreateView, JournalEntryListView, JournalEntryDetailView, user_audio_sessions, session_audio_by_id, add_favorite, remove_favorite, FavoriteSessionListView, UserUpdateView, PublicUserListView
 
 urlpatterns = [
     path("user/create/", UserCreateView.as_view(), name="user-create"),
@@ -13,4 +13,7 @@ urlpatterns = [
     path("sessions/favorite/add/", add_favorite, name="add-favorite"),
     path("sessions/favorite/remove/", remove_favorite, name="remove-favorite"),
     path("sessions/favorites/", FavoriteSessionListView.as_view(), name="user-favorites"),
+    path("journal/create/", JournalEntryCreateView.as_view(), name="journal-create"),
+    path("journal/", JournalEntryListView.as_view(), name="journal-list"),
+    path("journal/<int:id>/", JournalEntryDetailView.as_view(), name="journal-detail"),
 ]
