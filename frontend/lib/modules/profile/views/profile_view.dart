@@ -5,6 +5,7 @@ import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/profile/views/widgets/favorite_list_view.dart';
+import 'package:minder_frontend/modules/profile/views/widgets/journal_list_view.dart';
 import 'package:minder_frontend/modules/settings/views/settings_view.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
@@ -31,7 +32,14 @@ class _ProfileViewState extends State<ProfileView>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBackground,
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, color: appPrimary),
+            onPressed: () => Get.to(() => SettingsView()),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -71,40 +79,13 @@ class _ProfileViewState extends State<ProfileView>
                 controller: _tabController,
                 children: [
                   FavoriteListSection(),
-                  SettingsView(),
+                  //SettingsView(),
+                  JournalListView()
                 ],
               ),
             ),
             //Expanded(child: FavoriteListSection()),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              icon: const Icon(
-                Icons.logout,
-                color: appBackground,
-              ),
-              label: const Text(
-                "Logout",
-                style: AppTextStyles.button,
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: appPrimary,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              ),
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Confirm Logout",
-                  middleText: "Are you sure?",
-                  textCancel: "Cancel",
-                  textConfirm: "Logout",
-                  confirmTextColor: Colors.white,
-                  onConfirm: () {
-                    _authCtrl.logout(); // ← use the existing controller
-                    Get.back(); // close dialog
-                  },
-                );
-              },
-            ),
           ],
         ),
       ),

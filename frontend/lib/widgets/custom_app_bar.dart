@@ -4,10 +4,12 @@ import 'package:minder_frontend/helpers/constants/strings.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
+  final List<Widget>? actions;
 
   const CustomAppBar({
     super.key,
     this.bottom,
+    this.actions,
   });
 
   @override
@@ -24,6 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
+      actions: actions,
       bottom: bottom,
     );
   }

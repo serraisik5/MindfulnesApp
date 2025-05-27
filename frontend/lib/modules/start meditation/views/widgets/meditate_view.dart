@@ -48,11 +48,12 @@ class _MeditateViewState extends State<MeditateView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Choose a topic to focuse on", style: AppTextStyles.heading),
+            Text("Choose your meditation parameters",
+                style: AppTextStyles.heading),
             const SizedBox(height: 16),
 
             // — Type selector as a list
-            Text("Type", style: AppTextStyles.lightheading),
+            Text("Topic", style: AppTextStyles.lightheading),
             const SizedBox(height: 8),
             ParameterDropdown(
               title: "Category",
@@ -80,8 +81,9 @@ class _MeditateViewState extends State<MeditateView> {
 
             Text("How are you feeling?", style: AppTextStyles.lightheading),
             const SizedBox(height: 16),
-            TextField(
+            TextFormField(
               controller: _feelingController,
+              maxLines: 3,
               decoration: InputDecoration(
                 hintText: "I am feeling …",
                 hintStyle: AppTextStyles.lightheading,

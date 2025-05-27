@@ -4,49 +4,89 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/profile/controllers/voice_controller.dart';
 import 'package:minder_frontend/modules/settings/views/pages/voice_selection_view.dart';
 import 'package:minder_frontend/services/local_storage.dart';
 
 class SettingsView extends StatelessWidget {
-  SettingsView({super.key});
+  SettingsView({Key? key}) : super(key: key);
 
-  // make sure the VoiceController is in memory
   final voiceCtl = Get.put(VoiceController());
+
+  final _authCtrl = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ─── Language selector ─────────────────────────────────────────
-          GetBuilder<VoiceController>(
-            builder: (_) {
+    return Scaffold(
+      backgroundColor: appBackground,
+      appBar: AppBar(
+        title: Text("Settings", style: AppTextStyles.heading),
+        backgroundColor: appBackground,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GetBuilder<VoiceController>(builder: (_) {
               final selectedLabel = _.getSelectedVoice()?.label ?? '';
               return SettingItem(
                 icon: Icons.language,
                 title: "Language",
                 subtitle: selectedLabel,
-                onTap: () => Get.to(() => const VoiceView()),
+                onTap: () => Get.to(
+                  () => const VoiceView(),
+                  transition: Transition.rightToLeft,
+                ),
               );
-            },
-          ),
-
-          // ─── Voice selector ────────────────────────────────────────────
-          GetBuilder<VoiceController>(
-            builder: (_) {
+            }),
+            const SizedBox(height: 24),
+            GetBuilder<VoiceController>(builder: (_) {
               final selectedLabel = _.getSelectedVoice()?.label ?? '';
               return SettingItem(
                 icon: Icons.record_voice_over,
                 title: "Voice",
                 subtitle: selectedLabel,
-                onTap: () => Get.to(() => const VoiceView()),
+                onTap: () => Get.to(
+                  () => const VoiceView(),
+                  transition: Transition.rightToLeft,
+                ),
               );
-            },
-          ),
-        ],
+            }),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.logout,
+                color: appBackground,
+              ),
+              label: const Text(
+                "Logout",
+                style: AppTextStyles.button,
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: appPrimary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Confirm Logout",
+                  middleText: "Are you sure?",
+                  textCancel: "Cancel",
+                  textConfirm: "Logout",
+                  confirmTextColor: Colors.white,
+                  onConfirm: () {
+                    _authCtrl.logout(); // ← use the existing controller
+                    Get.back(); // close dialog
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

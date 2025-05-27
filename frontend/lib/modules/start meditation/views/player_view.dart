@@ -95,7 +95,7 @@ class _PlayerViewState extends State<PlayerView> {
                 child: Column(
                   children: [
                     Text(
-                      "Focus Attention",
+                      sessionCtl.currentSession.value?.title ?? "Meditation",
                       style: AppTextStyles.heading,
                     ),
                     SizedBox(
