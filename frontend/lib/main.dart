@@ -1,27 +1,34 @@
 import 'dart:developer';
 
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
-import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/login_view.dart';
-import 'package:minder_frontend/modules/login-register/views/register_view.dart';
-import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 import 'package:minder_frontend/services/local_storage.dart';
+import 'package:minder_frontend/services/localization_service.dart';
 
 MyAudioHandler myAudioHandler = MyAudioHandler();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   Get.put(MeditationSessionController(), permanent: true);
+
   final authController = Get.put(AuthController(), permanent: true);
   await authController.tryAutoLogin();
+
   Get.put(MeditationSessionController());
+
   await LocalStorage.initalizeStorage();
-  runApp(const MyApp());
+
+  await LocalizationService.initialize();
+  Get.put(LocalizationService());
+
+  runApp(LocalizedApp(LocalizationService.delegate, MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -47,18 +54,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Get.find<AuthController>();
-    return Obx(() {
-      // splash / loading
-      if (auth.isLoading.value) {
-        return const MaterialApp(
-          home: Scaffold(body: Center(child: CircularProgressIndicator())),
-        );
-      }
-      // decide initial screen
-      return GetMaterialApp(
-        title: 'Mindfulness',
-        home: auth.isLoggedIn.value ? const BaseView() : LoginView(),
-      );
-    });
+
+    return GetMaterialApp(
+      title: 'Mindfulness',
+      // ⬇️ make sure you register your translations, localizations, etc
+      locale: LocalizationService.localeRx.value,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        LocalizationService.delegate,
+      ],
+      supportedLocales: LocalizationService.delegate.supportedLocales,
+      home: Obx(() {
+        if (auth.isLoading.value) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return auth.isLoggedIn.value ? const BaseView() : LoginView();
+      }),
+    );
   }
 }

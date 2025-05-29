@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
-import 'package:minder_frontend/modules/profile/controllers/voice_controller.dart';
+import 'package:minder_frontend/modules/settings/controllers/voice_controller.dart';
+import 'package:minder_frontend/modules/settings/views/pages/language_selection_view.dart';
 import 'package:minder_frontend/modules/settings/views/pages/voice_selection_view.dart';
 import 'package:minder_frontend/services/local_storage.dart';
 
@@ -38,7 +39,7 @@ class SettingsView extends StatelessWidget {
                 title: "Language",
                 subtitle: "English",
                 onTap: () => Get.to(
-                  () => const VoiceView(),
+                  () => const LanguageSelectionView(),
                   transition: Transition.rightToLeft,
                 ),
               );
