@@ -3,24 +3,31 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
-import 'package:minder_frontend/modules/settings/controllers/voice_controller.dart';
+import 'package:minder_frontend/modules/settings/controllers/language_controller.dart';
 
-class VoiceView extends StatefulWidget {
-  const VoiceView({super.key});
+class LanguageSelectionView extends StatefulWidget {
+  const LanguageSelectionView({super.key});
 
   @override
-  State<VoiceView> createState() => _VoiceViewState();
+  State<LanguageSelectionView> createState() => _LanguageViewState();
 }
 
-class _VoiceViewState extends State<VoiceView> {
+class _LanguageViewState extends State<LanguageSelectionView> {
+  @override
+  void initState() {
+    super.initState();
+    // ← this makes sure Get.find<LanguagesController>() will work
+    Get.put(LanguagesController());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VoiceController>(builder: (voiceController) {
+    return GetBuilder<LanguagesController>(builder: (voiceController) {
       return Scaffold(
           backgroundColor: appBackground,
           appBar: AppBar(
             backgroundColor: appBackground,
-            title: Text("Voice",
+            title: Text("Language",
                 style: Get.theme.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -47,14 +54,14 @@ class _VoiceViewState extends State<VoiceView> {
             padding: EdgeInsets.all(12),
             child: Column(
               children: List.generate(
-                voiceController.voices.length,
+                voiceController.languages.length,
                 (index) {
-                  final voice = voiceController.voices[index];
+                  final language = voiceController.languages[index];
                   return VoiceSelectWidget(
                     voiceController: voiceController,
-                    voice: voice,
+                    voice: language,
                     selectItem: () {
-                      voiceController.selectVoice(voice.name ?? '');
+                      voiceController.selectLanguage(language.code ?? '');
                     },
                   );
                 },
@@ -72,8 +79,8 @@ class VoiceSelectWidget extends StatelessWidget {
     required this.selectItem,
     required this.voiceController,
   });
-  final VoiceItemModel voice;
-  final VoiceController voiceController;
+  final LanguageItemModel voice;
+  final LanguagesController voiceController;
   final void Function() selectItem;
   @override
   Widget build(BuildContext context) {
@@ -97,7 +104,7 @@ class VoiceSelectWidget extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(voice.label ?? ""),
+                child: Text(voice.title ?? ""),
               ),
               Spacer(),
               GestureDetector(
