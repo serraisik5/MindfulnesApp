@@ -3,7 +3,11 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:logger/logger.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 
 class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   static final MyAudioHandler _instance = MyAudioHandler._internal();

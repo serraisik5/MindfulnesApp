@@ -11,10 +11,9 @@ import 'package:minder_frontend/widgets/custom_text_field.dart';
 class LoginView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _authCtrl = Get.find<AuthController>();
 
-  LoginView({super.key}) {
-    Get.put(AuthController());
-  }
+  LoginView({super.key}) {}
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +79,7 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     String email = emailController.text;
                     String password = passwordController.text;
-                    AuthController().login(email, password);
+                    _authCtrl.login(email, password);
                     print('Email: $email, Password: $password');
                     //Get.offAll(() => const BaseView());
                     // Perform authentication logic

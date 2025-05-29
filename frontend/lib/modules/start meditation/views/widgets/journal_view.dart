@@ -29,13 +29,15 @@ class _JournalCreateViewState extends State<JournalCreateView> {
             key: _formKey,
             child: Expanded(
               child: TextFormField(
+                textAlignVertical: TextAlignVertical.top,
                 controller: _controller,
                 style: AppTextStyles.body,
                 decoration: InputDecoration(
                   hintText: 'Write about your day…',
-                  fillColor: appTertiary.withOpacity(0.1),
+                  fillColor: appTertiary.withAlpha(50),
                   filled: true,
                   border: OutlineInputBorder(
+                    borderSide: BorderSide(color: appPrimary),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),

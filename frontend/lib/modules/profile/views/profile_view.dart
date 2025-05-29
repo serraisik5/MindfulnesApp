@@ -69,7 +69,7 @@ class _ProfileViewState extends State<ProfileView>
                 Tab(
                   text: "Favorites",
                 ),
-                Tab(text: "Settings"),
+                Tab(text: "Journals"),
               ],
             ),
 

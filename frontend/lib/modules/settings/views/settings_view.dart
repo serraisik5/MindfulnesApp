@@ -36,7 +36,7 @@ class SettingsView extends StatelessWidget {
               return SettingItem(
                 icon: Icons.language,
                 title: "Language",
-                subtitle: selectedLabel,
+                subtitle: "English",
                 onTap: () => Get.to(
                   () => const VoiceView(),
                   transition: Transition.rightToLeft,

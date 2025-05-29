@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
 import 'package:minder_frontend/services/audio_service.dart';
 
 class AudioSeekBar extends StatefulWidget {
-  const AudioSeekBar({super.key});
+  AudioSeekBar({super.key});
 
   @override
   State<AudioSeekBar> createState() => _AudioSeekBarState();
@@ -11,11 +14,14 @@ class AudioSeekBar extends StatefulWidget {
 
 class _AudioSeekBarState extends State<AudioSeekBar> {
   Duration currentPosition = Duration.zero;
-  final Duration totalDuration = MyAudioHandler().totalDuration;
+  final sessionCtl = Get.find<MeditationSessionController>();
+  late Duration totalDuration;
 
   @override
   void initState() {
     super.initState();
+    totalDuration =
+        Duration(minutes: sessionCtl.currentSession.value?.duration ?? 2);
     MyAudioHandler().playerPositionStream.listen((pos) {
       if (mounted) {
         setState(() {

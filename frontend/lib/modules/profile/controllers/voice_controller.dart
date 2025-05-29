@@ -28,25 +28,25 @@ class VoiceController extends GetxController {
   final List<VoiceItemModel> _voices = [
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Aria",
+      label: "Alloy",
       name: "alloy",
       selectStatus: false,
     ),
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Atlas",
+      label: "Ash",
       name: "ash",
       selectStatus: false,
     ),
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Luna",
+      label: "Coral",
       name: "coral",
       selectStatus: false,
     ),
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Bard",
+      label: "Echo",
       name: "echo",
       selectStatus: false,
     ),
@@ -70,13 +70,13 @@ class VoiceController extends GetxController {
     // ),
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Venus",
+      label: "Sage",
       name: "sage",
       selectStatus: false,
     ),
     // Available in TTS and Realtime API
     VoiceItemModel(
-      label: "Carmen",
+      label: "Shimmer",
       name: "shimmer",
       selectStatus: false,
     ),

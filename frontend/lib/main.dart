@@ -19,6 +19,7 @@ void main() async {
   Get.put(MeditationSessionController(), permanent: true);
   final authController = Get.put(AuthController(), permanent: true);
   await authController.tryAutoLogin();
+  Get.put(MeditationSessionController());
   await LocalStorage.initalizeStorage();
   runApp(const MyApp());
 }

@@ -12,9 +12,9 @@ import 'package:minder_frontend/widgets/custom_blue_button.dart';
 import 'package:minder_frontend/widgets/custom_text_field.dart';
 
 class RegisterView extends StatelessWidget {
-  RegisterView({super.key}) {
-    Get.put(AuthController());
-  }
+  final _authCtrl = Get.find<AuthController>();
+
+  RegisterView({super.key}) {}
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -120,7 +120,7 @@ class RegisterView extends StatelessWidget {
                           birthday: '2000-01-01',
                         );
 
-                        AuthController().register(user);
+                        _authCtrl.register(user);
 
                         print(nameController.text);
                         //Get.offAll(() => const BaseView());

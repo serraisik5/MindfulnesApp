@@ -7,3 +7,5 @@ const String LOGIN_TOP_WAVE = 'assets/images/login_top_wave.png';
 const String REGISTER_WAVE = 'assets/images/register_wave.png';
 const String PLAYER_ELLIPSE = 'assets/images/player_ellipse.png';
 const String PLAYER_VECTOR = 'assets/images/player_vector.png';
+const String HOME_HEART = 'assets/images/home_card_heart.png';
+const String HOME_OWELS = 'assets/images/home_card_owels.png';

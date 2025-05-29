@@ -17,7 +17,7 @@ class MeditateView extends StatefulWidget {
 
 class _MeditateViewState extends State<MeditateView> {
   // your controller:
-  final sessionController = Get.put(MeditationSessionController());
+  final sessionController = Get.find<MeditationSessionController>();
 
   // Available meditation types
   final List<String> _types = [
