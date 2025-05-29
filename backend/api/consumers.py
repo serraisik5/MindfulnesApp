@@ -21,6 +21,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
         self.full_transcript = ""
         self.title = None
         self.duration = None
+        self.language = "English" 
 
         await self.accept()
         if isinstance(self.user, AnonymousUser):
@@ -57,7 +58,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
             self.duration = int(data.get("duration", 1))
             self.background_noise = data.get("background_noise", "rainy").lower()
             self.voice = data.get("voice", "sage").lower()
-
+            self.language = data.get("language", "English").title()
             self.raw_feeling_input = data.get("how_you_feel", "")
 
             if self.background_noise not in ["rainy", "piano", "fire"]:
@@ -67,7 +68,7 @@ class MeditationConsumer(AsyncWebsocketConsumer):
 
             logger.info(f"🔹 Title: {self.title}, Duration: {self.duration}, Noise: {self.background_noise}, Voice: {self.voice}")
 
-            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self, self.raw_feeling_input))
+            asyncio.create_task(generate_meditation_ws(self.title, self.duration, self.voice, self, self.raw_feeling_input, self.language))
 
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Invalid request: {e}")

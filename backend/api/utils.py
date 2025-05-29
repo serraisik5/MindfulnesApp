@@ -26,7 +26,7 @@ if OPENAI_API_KEY:
 else:
     logger.error("OPENAI_API_KEY is missing or not set!")
 
-async def generate_meditation_ws(title, duration, voice, user_channel,how_you_feel=""):
+async def generate_meditation_ws(title, duration, voice, user_channel,how_you_feel="", language="English"):
     """Connects to OpenAI WebSocket and streams meditation session to user WebSocket."""
     logger.info(f"Selected voice: {voice}")
     
@@ -41,6 +41,7 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
     
     # 🔹 Log headers to ensure key is being sent correctly
     logger.info(f"WebSocket Headers: {headers}")
+    logger.info(f"🗣️ Language selected: {language}")
 
     try:
         async with connect(OPENAI_REALTIME_WS_URL, extra_headers=headers) as ws:
@@ -83,26 +84,28 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
                     "modalities": ["audio", "text"],
                     "voice": voice,
                     "output_audio_format": "pcm16",
-                    "instructions": "Generate a calm, guided meditation session in a soft, soothing tone, but dont be too slow."
-                }
+                    "instructions": (
+                        f"Generate a calm, guided meditation session in a soft, soothing tone, "
+                        f"spoken entirely in {language}. Keep a natural pace—do not be excessively slow."
+                    ),
+                },
             }
             await ws.send(json.dumps(session_event))
             logger.info("🔹 Sent session update request")
-            
-            # Step 2: Send the user’s request
+
+            # 🔹 2. Send the user request (include language)
+            user_prompt = (
+                f"Create a {duration}-minute meditation session on {title}. "
+                f"The entire meditation must be delivered in {language}. "
+                f"The user currently feels: '{how_you_feel}'."
+            )
             message_event = {
                 "type": "conversation.item.create",
                 "item": {
                     "type": "message",
                     "role": "user",
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": f"Create a {duration}-minute meditation session on {title} and on this duration: {duration} "
-                            f"considering the user is feeling: '{how_you_feel}'."
-                        }
-                    ]
-                }
+                    "content": [{"type": "input_text", "text": user_prompt}],
+                },
             }
             await ws.send(json.dumps(message_event))
             logger.info(f"🔹 Sent user request: {title}, {duration} min")
@@ -124,12 +127,24 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
                 #logger.debug(f"📩 Received WebSocket Message: {data}")
 
                 # Send text response
-                if data.get("type") in ["response.audio_transcript.done", "response.content_part.done"]:
-                    transcript = data.get("transcript") or data.get("part", {}).get("transcript")
-                    if transcript:
-                        transcript_collected += f" {transcript}"  # Append text to full transcript
-                        user_channel.transcript_collected = transcript_collected
-                        await user_channel.send_text(transcript) 
+                if data.get("type") == "response.created":
+                    logger.debug("Response acknowledged by OpenAI")
+
+                if data["type"] in {                       #  ← replace the set
+                            "response.content_part",
+                            "response.audio_transcript.delta",
+                            "response.content_part.done",
+                            "response.audio_transcript.done"
+                    }:
+                        transcript = (
+                            data.get("transcript") or
+                            data.get("part", {}).get("transcript")
+                        )
+                        if transcript:
+                            transcript_collected += f" {transcript}"
+                            user_channel.transcript_collected = transcript_collected
+                            await user_channel.send_text(transcript)
+ 
 
                 # Send audio response as base64
                 if data.get("type") == "response.audio.delta":
@@ -139,6 +154,10 @@ async def generate_meditation_ws(title, duration, voice, user_channel,how_you_fe
                         await user_channel.send(bytes_data=audio_chunk)
                         logger.info("🎵 Sent audio chunk")
                  # Detect when OpenAI streaming is done
+                if data["type"] == "response.done":
+                    status = data.get("status") or data.get("response", {}).get("status")
+                    if status and status != "completed":
+                        logger.error(f"⛔ OpenAI returned status={status}: {data}")
                 if data.get("type") == "response.done":
                     logger.info("✅ Meditation session complete. Closing WebSocket.")
                     break  # Exit the loop when streaming ends
