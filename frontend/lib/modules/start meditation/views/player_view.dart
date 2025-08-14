@@ -18,7 +18,7 @@ class PlayerView extends StatefulWidget {
 }
 
 class _PlayerViewState extends State<PlayerView> {
-  final favCtl = Get.put(FavoriteController());
+  final favCtl = Get.find<FavoriteController>();
   final sessionCtl = Get.find<MeditationSessionController>();
 
   @override

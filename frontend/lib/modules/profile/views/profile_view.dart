@@ -9,6 +9,7 @@ import 'package:minder_frontend/modules/login-register/controllers/auth_controll
 import 'package:minder_frontend/modules/profile/views/widgets/favorite_list_view.dart';
 import 'package:minder_frontend/modules/profile/views/widgets/journal_list_view.dart';
 import 'package:minder_frontend/modules/settings/views/settings_view.dart';
+import 'package:minder_frontend/modules/start meditation/controllers/favorite_controller.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class ProfileView extends StatefulWidget {
@@ -27,6 +28,30 @@ class _ProfileViewState extends State<ProfileView>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
+    // Add listener to refresh favorites when tab changes
+    _tabController.addListener(() {
+      if (_tabController.index == 0) {
+        // Favorites tab
+        _refreshFavorites();
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh favorites when the view becomes visible
+    _refreshFavorites();
+  }
+
+  void _refreshFavorites() {
+    try {
+      final favoriteController = Get.find<FavoriteController>();
+      favoriteController.loadFavorites();
+    } catch (e) {
+      print("Error refreshing favorites: $e");
+    }
   }
 
   @override
@@ -83,5 +108,11 @@ class _ProfileViewState extends State<ProfileView>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }

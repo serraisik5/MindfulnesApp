@@ -38,7 +38,7 @@ class FavoriteController extends GetxController {
     return favorites.any((s) => s.id == sessionId);
   }
 
-  /// Toggles favorite status for a session. If it’s already favorited,
+  /// Toggles favorite status for a session. If it's already favorited,
   /// calls removeFavorite, otherwise calls addFavorite. Then updates `favorites`.
   Future<void> toggle(MeditationSessionModel? session) async {
     print(session);
@@ -48,15 +48,18 @@ class FavoriteController extends GetxController {
       try {
         if (already) {
           await FavoriteService.removeFavorite(session.id);
-          favorites.removeWhere((s) => s.id == session.id);
+          // Refresh the entire list from backend to ensure consistency
+          await loadFavorites();
           Get.snackbar("Removed", "Session removed from favorites");
         } else {
           print("selen false");
           await FavoriteService.addFavorite(session.id);
-          favorites.add(session);
+          // Refresh the entire list from backend to ensure consistency
+          await loadFavorites();
           Get.snackbar("Favorited", "Session added to favorites");
         }
       } catch (e) {
+        print("Error in toggle: $e");
         Get.snackbar(
             "Error", "Could not ${already ? 'remove' : 'add'} favorite");
       }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -79,6 +80,11 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   Future<void> startPlayer({required MediaItem? song}) async {
     try {
+      // Ensure we're on the main thread for platform channel operations
+      if (!WidgetsBinding.instance.isRootWidgetAttached) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
       if (isPlaying) {
         print(
             "Another audio is playing. Stopping it before starting a new one.");
@@ -91,6 +97,9 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         _emitPlayerState(
             playing: true, processingState: ProcessingState.loading);
 
+        // Use a small delay to ensure platform thread is ready
+        await Future.delayed(const Duration(milliseconds: 50));
+
         await audioPlayer.startPlayerFromStream(
           codec: Codec.pcm16,
           sampleRate: 24000,
@@ -98,11 +107,14 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           interleaved: true,
           bufferSize: 4096,
           onBufferUnderlow: () {
-            isPlaying = false;
-            isCompleted = true;
-            _emitPlayerState(
-                playing: false, processingState: ProcessingState.completed);
-            log("Playback finished");
+            // Ensure callback is on main thread
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              isPlaying = false;
+              isCompleted = true;
+              _emitPlayerState(
+                  playing: false, processingState: ProcessingState.completed);
+              log("Playback finished");
+            });
           },
         );
         startPositionUpdates();
@@ -134,10 +146,31 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   Future<void> playFromUrl(String url) async {
+    print("Attempting to play URL: $url");
+
+    // Validate URL
+    if (url.isEmpty) {
+      print("Error: Empty URL provided");
+      return;
+    }
+
+    // Ensure URL is properly formatted
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      print(
+          "Error: Invalid URL format. URL must start with http:// or https://");
+      return;
+    }
+
+    // Ensure we're on the main thread for platform channel operations
+    if (!WidgetsBinding.instance.isRootWidgetAttached) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
     // 1) Ensure the native player is open
     if (!audioPlayer.isOpen()) {
       try {
         await audioPlayer.openPlayer();
+        print("Audio player opened successfully");
       } catch (e) {
         print("Error re-opening player: $e");
         return;
@@ -152,25 +185,87 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     _emitPlayerState(playing: false, processingState: ProcessingState.loading);
 
     try {
-      await audioPlayer.startPlayer(
-        fromURI: url,
-        codec: Codec.pcm16WAV, // WAV files usually use this codec
-        whenFinished: () {
-          isPlaying = false;
-          _emitPlayerState(
-            playing: false,
-            processingState: ProcessingState.completed,
-          );
-        },
-      );
+      // Use a small delay to ensure platform thread is ready
+      await Future.delayed(const Duration(milliseconds: 50));
 
+      print("Starting player with URL: $url");
+
+      // Try different codecs based on file extension
+      Codec codec = Codec.pcm16WAV; // Default for WAV files
+      if (url.toLowerCase().endsWith('.mp3')) {
+        codec = Codec.mp3;
+      } else if (url.toLowerCase().endsWith('.aac')) {
+        codec = Codec.aacADTS;
+      } else if (url.toLowerCase().endsWith('.wav')) {
+        codec = Codec.pcm16WAV;
+      }
+
+      print("Using codec: $codec");
+
+      // Try the standard method first
+      try {
+        await audioPlayer.startPlayer(
+          fromURI: url,
+          codec: codec,
+          whenFinished: () {
+            // Ensure callback is on main thread
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              print("Audio playback finished");
+              isPlaying = false;
+              _emitPlayerState(
+                playing: false,
+                processingState: ProcessingState.completed,
+              );
+            });
+          },
+        );
+      } catch (firstError) {
+        print("First attempt failed: $firstError");
+        print("Trying alternative method...");
+
+        // Try alternative method for WAV files
+        if (url.toLowerCase().endsWith('.wav')) {
+          try {
+            await audioPlayer.startPlayer(
+              fromURI: url,
+              codec: Codec.pcm16, // Try without WAV wrapper
+              whenFinished: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  print("Audio playback finished (alternative method)");
+                  isPlaying = false;
+                  _emitPlayerState(
+                    playing: false,
+                    processingState: ProcessingState.completed,
+                  );
+                });
+              },
+            );
+          } catch (secondError) {
+            print("Alternative method also failed: $secondError");
+            throw secondError;
+          }
+        } else {
+          throw firstError;
+        }
+      }
+
+      print("Audio player started successfully");
       isPlaying = true;
       _emitPlayerState(playing: true, processingState: ProcessingState.ready);
       // If you want your seek-bar to update:
       startPositionUpdates(resetPosition: true);
     } catch (err) {
       print("Error playing from URL: $err");
+      print("URL that failed: $url");
       _emitPlayerState(playing: false, processingState: ProcessingState.idle);
+
+      // Try to provide more specific error information
+      if (err.toString().contains("PlatformException")) {
+        print(
+            "This appears to be a platform-specific error. Check if the URL is accessible.");
+        print(
+            "Try accessing the URL directly in a browser to verify it's accessible.");
+      }
     }
   }
 
@@ -224,6 +319,11 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   Future<void> play() async {
     print("selen13");
     try {
+      // Ensure we're on the main thread for platform channel operations
+      if (!WidgetsBinding.instance.isRootWidgetAttached) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
       if (!audioPlayer.isOpen()) {
         log("Audio player is not open. Reinitializing...");
         await resetPlayer();
@@ -235,6 +335,9 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           log("Playback completed, starting from the beginning...");
           //await startPlayer(); // Restart playback
         } else {
+          // Use a small delay to ensure platform thread is ready
+          await Future.delayed(const Duration(milliseconds: 50));
+
           await audioPlayer.resumePlayer();
           isPlaying = true;
 
@@ -263,7 +366,15 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   @override
   Future<void> pause() async {
     try {
+      // Ensure we're on the main thread for platform channel operations
+      if (!WidgetsBinding.instance.isRootWidgetAttached) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
       if (isPlaying) {
+        // Use a small delay to ensure platform thread is ready
+        await Future.delayed(const Duration(milliseconds: 50));
+
         await audioPlayer.pausePlayer();
         isPlaying = false;
         // Notify the lock screen (Ensure play button remains enabled)
