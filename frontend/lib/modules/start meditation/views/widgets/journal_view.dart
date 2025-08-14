@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/journal_controller.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
@@ -25,15 +26,15 @@ class _JournalCreateViewState extends State<JournalCreateView> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Form(
-            key: _formKey,
-            child: Expanded(
+          Expanded(
+            child: Form(
+              key: _formKey,
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.top,
                 controller: _controller,
                 style: AppTextStyles.body,
                 decoration: InputDecoration(
-                  hintText: 'Write about your day…',
+                  hintText: WRITE_JOURNAL_HINT,
                   fillColor: appTertiary.withAlpha(50),
                   filled: true,
                   border: OutlineInputBorder(
@@ -43,20 +44,20 @@ class _JournalCreateViewState extends State<JournalCreateView> {
                 ),
                 maxLines: null,
                 expands: true,
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Cannot be empty' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? VALIDATOR_CANNOT_BE_EMPTY
+                    : null,
               ),
             ),
           ),
           const SizedBox(height: 16),
           Obx(() {
             return CustomBlueButton(
-              text: journalCtl.isLoading.value ? 'Saving…' : 'Save Entry',
+              text: journalCtl.isLoading.value
+                  ? BUTTON_SAVING
+                  : BUTTON_SAVE_ENTRY,
               onPressed: () {
-                // If we're already saving, just bail out
                 if (journalCtl.isLoading.value) return;
-
-                // Otherwise validate & submit
                 if (_formKey.currentState!.validate()) {
                   journalCtl.addEntry(_controller.text.trim());
                   _controller.clear();

@@ -57,17 +57,24 @@ class LanguagesController extends GetxController {
   }
 
   Future<void> _initializeDefaultLanguage() async {
-    // Get the saved language code from local storage, device locale or default to English (en)
-    String languageCode = LocalStorage.getLocalParameter("language") ??
-        Get.deviceLocale?.languageCode ??
-        'en';
+    try {
+      // Get the saved language code from local storage, device locale or default to English (en)
+      String languageCode = LocalStorage.getLocalParameter("language") ??
+          Get.deviceLocale?.languageCode ??
+          'en';
 
-    // If language is not supported, don't select/save any language in the settings menu.
-    // This allows the user to still listen to the content in their device language by default.
-    if (isLanguageSupported(languageCode)) {
+      // If language is not supported, default to English
+      if (!isLanguageSupported(languageCode)) {
+        log("DEVICE LANGUAGE CODE ($languageCode) NOT SUPPORTED, defaulting to English");
+        languageCode = 'en';
+      }
+
+      // Always select a language
       selectLanguage(languageCode);
-    } else {
-      log("DEVICE LANGUAGE CODE ($languageCode) NOT SUPPORTED");
+    } catch (e) {
+      log("Error in _initializeDefaultLanguage: $e");
+      // Fallback to English
+      selectLanguage('en');
     }
   }
 
@@ -91,8 +98,26 @@ class LanguagesController extends GetxController {
 
   // Get the currently selected language
   LanguageItemModel? getSelectedLanguage() {
-    return _languages
-        .firstWhereOrNull((language) => language.selectStatus == true);
+    try {
+      final selectedLanguage = _languages
+          .firstWhereOrNull((language) => language.selectStatus == true);
+
+      // If no language is selected, default to English
+      if (selectedLanguage == null) {
+        final englishLanguage =
+            _languages.firstWhereOrNull((language) => language.code == 'en');
+        if (englishLanguage != null) {
+          englishLanguage.selectStatus = true;
+          return englishLanguage;
+        }
+      }
+
+      return selectedLanguage;
+    } catch (e) {
+      log("Error in getSelectedLanguage: $e");
+      // Fallback to first language if available
+      return _languages.isNotEmpty ? _languages.first : null;
+    }
   }
 
   // Check if a language is supported

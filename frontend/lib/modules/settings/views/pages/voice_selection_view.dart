@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
-import 'package:minder_frontend/helpers/styles/text_style.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/modules/settings/controllers/voice_controller.dart';
 
 class VoiceView extends StatefulWidget {
@@ -20,7 +19,7 @@ class _VoiceViewState extends State<VoiceView> {
           backgroundColor: appBackground,
           appBar: AppBar(
             backgroundColor: appBackground,
-            title: Text("Voice",
+            title: Text(VOICE,
                 style: Get.theme.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

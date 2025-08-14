@@ -1,10 +1,13 @@
+// lib/modules/start meditation/views/meditate_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
-import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
-import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
-import 'package:minder_frontend/modules/start%20meditation/views/widgets/parameter_dropdown.dart';
+import 'package:minder_frontend/modules/start meditation/controllers/meditation_session_controller.dart';
+import 'package:minder_frontend/modules/start meditation/views/player_view.dart';
+import 'package:minder_frontend/modules/start meditation/views/widgets/parameter_dropdown.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
 
@@ -16,21 +19,18 @@ class MeditateView extends StatefulWidget {
 }
 
 class _MeditateViewState extends State<MeditateView> {
-  // your controller:
   final sessionController = Get.find<MeditationSessionController>();
 
-  // Available meditation types
   final List<String> _types = [
-    "Relaxation",
-    "Personal Growth",
-    "Better Sleep",
-    "Reduce Stress",
-    "Improve Performance",
+    TYPE_RELAXATION,
+    TYPE_PERSONAL_GROWTH,
+    TYPE_BETTER_SLEEP,
+    TYPE_REDUCE_STRESS,
+    TYPE_IMPROVE_PERFORMANCE,
   ];
 
-  String _selectedType = "Relaxation";
-  double _selectedDuration = 5; // in minutes
-
+  String _selectedType = TYPE_RELAXATION;
+  double _selectedDuration = 5;
   final TextEditingController _feelingController = TextEditingController();
 
   @override
@@ -48,24 +48,21 @@ class _MeditateViewState extends State<MeditateView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Choose your meditation parameters",
-                style: AppTextStyles.heading),
+            Text(CHOOSE_PARAMETERS, style: AppTextStyles.heading),
             const SizedBox(height: 16),
-
-            // — Type selector as a list
-            Text("Topic", style: AppTextStyles.lightheading),
+            Text(TOPIC, style: AppTextStyles.lightheading),
             const SizedBox(height: 8),
             ParameterDropdown(
-              title: "Category",
-              //leading: Image.asset(PLAYER_ELLIPSE, width: 24, height: 24), // or your meditation icon
+              title: CATEGORY,
               items: _types,
               selected: _selectedType,
               onChanged: (type) => setState(() => _selectedType = type),
             ),
-
             const SizedBox(height: 48),
-            Text("Duration (${_selectedDuration.toInt()} min)",
-                style: AppTextStyles.lightheading),
+            Text(
+              "$DURATION (${_selectedDuration.toInt()} $MINUTES_SHORT)",
+              style: AppTextStyles.lightheading,
+            ),
             Slider(
               min: 1,
               max: 5,
@@ -76,16 +73,14 @@ class _MeditateViewState extends State<MeditateView> {
               activeColor: appPrimary,
               inactiveColor: appTertiary.withOpacity(0.3),
             ),
-
             const SizedBox(height: 16),
-
-            Text("How are you feeling?", style: AppTextStyles.lightheading),
+            Text(HOW_ARE_YOU_FEELING, style: AppTextStyles.lightheading),
             const SizedBox(height: 16),
             TextFormField(
               controller: _feelingController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: "I am feeling …",
+                hintText: HINT_FEELING,
                 hintStyle: AppTextStyles.lightheading,
                 filled: true,
                 fillColor: appTertiary.withOpacity(0.1),
@@ -95,21 +90,21 @@ class _MeditateViewState extends State<MeditateView> {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
             SizedBox(
-                width: double.infinity,
-                child: CustomBlueButton(
-                    text: "Start Meditation",
-                    onPressed: () async {
-                      // Send to backend + navigate
-                      await sessionController.startSession(
-                        _selectedType,
-                        _selectedDuration.toInt(),
-                        _feelingController.text,
-                      );
-                      Get.to(() => const PlayerView());
-                    })),
+              width: double.infinity,
+              child: CustomBlueButton(
+                text: START_MEDITATION,
+                onPressed: () async {
+                  await sessionController.startSession(
+                    _selectedType,
+                    _selectedDuration.toInt(),
+                    _feelingController.text,
+                  );
+                  Get.to(() => const PlayerView());
+                },
+              ),
+            ),
           ],
         ),
       ),

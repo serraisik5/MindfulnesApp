@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/settings/controllers/language_controller.dart';
 
@@ -27,7 +28,7 @@ class _LanguageViewState extends State<LanguageSelectionView> {
           backgroundColor: appBackground,
           appBar: AppBar(
             backgroundColor: appBackground,
-            title: Text("Language",
+            title: Text(LANGUAGE,
                 style: Get.theme.textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -96,40 +97,16 @@ class VoiceSelectWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(20)),
           child: Row(
             children: [
-              Icon(
-                Icons.check_rounded,
-                color: voice.selectStatus ?? false
-                    ? appPrimary
-                    : Colors.transparent,
-              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(voice.title ?? ""),
               ),
               Spacer(),
-              GestureDetector(
-                child: CircleAvatar(
-                    radius: 13,
-                    backgroundColor: appPrimary,
-                    child: SizedBox.shrink()
-                    // voiceController.isPlaying(voice)
-                    //     ? Icon(
-                    //         Icons.pause_rounded,
-                    //         size: 20,
-                    //         weight: 20,
-                    //         color: Get.isDarkMode ? k1A1A1A : kFFFFFF,
-                    //       )
-                    //     : Icon(
-                    //         Icons.play_arrow_rounded,
-                    //         size: 20,
-                    //         weight: 20,
-                    //         color: Get.isDarkMode ? k1A1A1A : kFFFFFF,
-                    //       ),
-                    ),
-                onTap: () {
-                  //voiceController.togglePlayPause(voice);
-                  voiceController.update();
-                },
+              Icon(
+                Icons.check_rounded,
+                color: voice.selectStatus ?? false
+                    ? appPrimary
+                    : Colors.transparent,
               ),
             ],
           )),

@@ -1,30 +1,44 @@
 // lib/modules/profile/views/settings_view.dart
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
+import 'package:minder_frontend/helpers/constants/strings.dart';
+import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
+import 'package:minder_frontend/modules/settings/controllers/language_controller.dart';
 import 'package:minder_frontend/modules/settings/controllers/voice_controller.dart';
 import 'package:minder_frontend/modules/settings/views/pages/language_selection_view.dart';
 import 'package:minder_frontend/modules/settings/views/pages/voice_selection_view.dart';
-import 'package:minder_frontend/services/local_storage.dart';
 
-class SettingsView extends StatelessWidget {
-  SettingsView({Key? key}) : super(key: key);
+class SettingsView extends StatefulWidget {
+  const SettingsView({super.key});
 
+  @override
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
   final voiceCtl = Get.put(VoiceController());
-
   final _authCtrl = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize LanguagesController if not already initialized
+    if (!Get.isRegistered<LanguagesController>()) {
+      Get.put(LanguagesController());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBackground,
       appBar: AppBar(
-        title: Text("Settings", style: AppTextStyles.heading),
         backgroundColor: appBackground,
         elevation: 0,
+        title: Text(SETTINGS, style: AppTextStyles.heading),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -32,12 +46,12 @@ class SettingsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GetBuilder<VoiceController>(builder: (_) {
-              final selectedLabel = _.getSelectedVoice()?.label ?? '';
+            GetBuilder<LanguagesController>(builder: (_) {
+              final selectedLang = _.getSelectedLanguage()?.title ?? "";
               return SettingItem(
                 icon: Icons.language,
-                title: "Language",
-                subtitle: "English",
+                title: LANGUAGE,
+                subtitle: selectedLang,
                 onTap: () => Get.to(
                   () => const LanguageSelectionView(),
                   transition: Transition.rightToLeft,
@@ -46,11 +60,11 @@ class SettingsView extends StatelessWidget {
             }),
             const SizedBox(height: 24),
             GetBuilder<VoiceController>(builder: (_) {
-              final selectedLabel = _.getSelectedVoice()?.label ?? '';
+              final selectedVoice = _.getSelectedVoice()?.label ?? "";
               return SettingItem(
                 icon: Icons.record_voice_over,
-                title: "Voice",
-                subtitle: selectedLabel,
+                title: VOICE,
+                subtitle: selectedVoice,
                 onTap: () => Get.to(
                   () => const VoiceView(),
                   transition: Transition.rightToLeft,
@@ -59,14 +73,8 @@ class SettingsView extends StatelessWidget {
             }),
             const SizedBox(height: 32),
             ElevatedButton.icon(
-              icon: const Icon(
-                Icons.logout,
-                color: appBackground,
-              ),
-              label: const Text(
-                "Logout",
-                style: AppTextStyles.button,
-              ),
+              icon: const Icon(Icons.logout, color: appBackground),
+              label: Text(LOGOUT, style: AppTextStyles.button),
               style: ElevatedButton.styleFrom(
                 backgroundColor: appPrimary,
                 padding:
@@ -74,14 +82,14 @@ class SettingsView extends StatelessWidget {
               ),
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Confirm Logout",
-                  middleText: "Are you sure?",
-                  textCancel: "Cancel",
-                  textConfirm: "Logout",
+                  title: CONFIRM_LOGOUT_TITLE,
+                  middleText: CONFIRM_LOGOUT_MESSAGE,
+                  textCancel: CANCEL,
+                  textConfirm: LOGOUT_ACTION,
                   confirmTextColor: Colors.white,
                   onConfirm: () {
-                    _authCtrl.logout(); // ← use the existing controller
-                    Get.back(); // close dialog
+                    _authCtrl.logout();
+                    Get.back();
                   },
                 );
               },
@@ -110,13 +118,13 @@ class SettingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: appPrimary),
       title:
           Text(title, style: AppTextStyles.button.copyWith(color: appDarkGrey)),
-      subtitle: Text(subtitle ?? "null", style: AppTextStyles.body),
+      subtitle: Text(subtitle ?? "", style: AppTextStyles.body),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: onTap,
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

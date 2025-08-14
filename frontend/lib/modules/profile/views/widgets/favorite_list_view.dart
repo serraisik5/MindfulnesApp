@@ -43,7 +43,6 @@ class FavoriteListSection extends StatelessWidget {
               if (s.audioUrl.isNotEmpty == true) {
                 // navigate to your player, passing s.audioFile
                 print(s.audioUrl);
-                print("selen isnotepmty");
                 MyAudioHandler().playFromUrl(s.audioUrl);
               }
               print("selen isepmty");

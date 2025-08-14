@@ -57,7 +57,8 @@ class WebSocketService {
       "title": title,
       "duration": duration,
       "voice": LocalStorage.getLocalParameter("voice"),
-      "how_you_feel": feeling
+      "how_you_feel": feeling,
+      "language": LocalStorage.getLocalParameter("language")
     });
     _channel?.sink.add(request);
   }

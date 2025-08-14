@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
-import 'package:minder_frontend/modules/favorites/views/favorites_view.dart';
 import 'package:minder_frontend/modules/home/views/home_view.dart';
 import 'package:minder_frontend/modules/profile/views/profile_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
