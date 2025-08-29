@@ -1,7 +1,10 @@
 // lib/modules/start_meditation/controllers/favorite_controller.dart
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minder_frontend/models/meditation_session_model.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
+import 'package:minder_frontend/modules/login-register/views/login_view.dart';
 import 'package:minder_frontend/services/favorite_service.dart';
 
 class FavoriteController extends GetxController {
@@ -11,6 +14,8 @@ class FavoriteController extends GetxController {
   /// Loading / error states for the list fetch
   final isLoading = false.obs;
   final errorMessage = RxnString();
+
+  final _authCtrl = Get.find<AuthController>();
 
   @override
   void onInit() {
@@ -60,8 +65,27 @@ class FavoriteController extends GetxController {
         }
       } catch (e) {
         print("Error in toggle: $e");
-        Get.snackbar(
-            "Error", "Could not ${already ? 'remove' : 'add'} favorite");
+
+        final isGuest =
+            !_authCtrl.isLoggedIn.value || _authCtrl.currentUser.value == null;
+
+        !isGuest
+            ? Get.snackbar(
+                "Error", "Could not ${already ? 'remove' : 'add'} favorite")
+            : Get.snackbar(
+                "Error",
+                "You need to log in to add favorite",
+                duration: const Duration(seconds: 4),
+                mainButton: isGuest
+                    ? TextButton(
+                        onPressed: () {
+                          Get.to(LoginView()); // Or: Get.to(() => LoginView());
+                        },
+                        child: const Text("Log in",
+                            style: TextStyle(color: Colors.black)),
+                      )
+                    : null,
+              );
       }
     }
   }

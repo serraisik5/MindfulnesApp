@@ -72,14 +72,19 @@ class _PlayerViewState extends State<PlayerView> {
                   children: [
                     Row(
                       children: [
-                        Obx(() => CustomFavoriteButton(
-                              iconColor: favCtl.isFav(
-                                      sessionCtl.currentSession.value?.id ?? 0)
-                                  ? Colors.red
-                                  : appTertiary,
-                              onPressed: () => favCtl
-                                  .toggle(sessionCtl.currentSession.value),
-                            )),
+                        Obx(
+                          () {
+                            final session = sessionCtl.currentSession.value;
+                            return session != null
+                                ? CustomFavoriteButton(
+                                    iconColor: favCtl.isFav(session.id)
+                                        ? Colors.red
+                                        : appTertiary,
+                                    onPressed: () => favCtl.toggle(session),
+                                  )
+                                : const SizedBox.shrink();
+                          },
+                        ),
                         SizedBox(
                           width: 250,
                         ),

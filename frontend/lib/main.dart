@@ -17,12 +17,13 @@ MyAudioHandler myAudioHandler = MyAudioHandler();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final authController = Get.put(AuthController(), permanent: true);
+
   Get.put(MeditationSessionController(), permanent: true);
   Get.put(FavoriteController(), permanent: true);
 
   await LocalStorage.initalizeStorage();
 
-  final authController = Get.put(AuthController(), permanent: true);
   final isLoggedIn = await authController.tryAutoLogin();
   if (!isLoggedIn) {
     LocalStorage.setLocalParameter<bool>("isGuest", true);
