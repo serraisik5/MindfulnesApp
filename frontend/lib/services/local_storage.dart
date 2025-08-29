@@ -7,11 +7,18 @@ class LocalStorage {
     await GetStorage.init();
   }
 
-  static void setLocalParameter(String key, String? value) {
+  // Generic setter
+  static void setLocalParameter<T>(String key, T value) {
     prefs.write(key, value);
   }
 
-  static String? getLocalParameter(String key) {
-    return prefs.read(key);
+  // Generic getter with optional default
+  static T? getLocalParameter<T>(String key, {T? defaultValue}) {
+    return prefs.read<T>(key) ?? defaultValue;
+  }
+
+  // Optional helper to remove
+  static void removeParameter(String key) {
+    prefs.remove(key);
   }
 }

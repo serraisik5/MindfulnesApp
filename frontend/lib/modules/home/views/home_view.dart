@@ -8,8 +8,9 @@ import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
 import 'package:minder_frontend/modules/home/views/widgets/course_card.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
-import 'package:minder_frontend/modules/start meditation/controllers/meditation_session_controller.dart';
-import 'package:minder_frontend/modules/start meditation/views/player_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/meditation_session_controller.dart';
+import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
+import 'package:minder_frontend/services/local_storage.dart';
 import 'package:minder_frontend/widgets/custom_app_bar.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,6 +21,9 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final authController = Get.find<AuthController>();
   final sessionController = Get.find<MeditationSessionController>();
+
+  // read once; if you want this to react to changes, read inside Obx or use a Rx<bool>
+  // Removed non-reactive isGuest field; compute inside Obx from reactive values
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +36,18 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Obx(() {
-              final firstName =
-                  authController.currentUser.value?.firstName ?? 'Guest';
+              final bool isGuest = !authController.isLoggedIn.value ||
+                  authController.currentUser.value == null;
+              final firstName = isGuest
+                  ? 'Hooman'
+                  : (authController.currentUser.value?.firstName ?? 'Guest');
               return Text(
                 '$GOOD_MORNING, ${firstName.capitalizeFirst}',
                 style: AppTextStyles.heading,
               );
             }),
             const SizedBox(height: 10),
-            Text(
-              HOME_WISH,
-              style: AppTextStyles.lightheading,
-            ),
+            Text(HOME_WISH, style: AppTextStyles.lightheading),
             const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

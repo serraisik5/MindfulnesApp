@@ -23,7 +23,7 @@ class AuthController extends GetxController {
     tryAutoLogin();
   }
 
-  Future<void> tryAutoLogin() async {
+  Future<bool> tryAutoLogin() async {
     isLoading.value = true;
 
     final token = await AuthService.getAccessToken();
@@ -33,10 +33,12 @@ class AuthController extends GetxController {
       if (stored != null) {
         currentUser.value = stored;
         isLoggedIn.value = true;
+        isLoading.value = false;
+        return true;
       }
     }
-
     isLoading.value = false;
+    return false;
   }
 
   Future<void> login(String email, String pw) async {

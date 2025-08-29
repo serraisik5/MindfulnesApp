@@ -8,6 +8,8 @@ import 'package:minder_frontend/modules/start%20meditation/controllers/meditatio
 import 'package:minder_frontend/modules/start%20meditation/views/player_view.dart';
 import 'package:minder_frontend/modules/start%20meditation/views/start_meditation_view.dart';
 import 'package:minder_frontend/services/audio_service.dart';
+import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
+import 'package:minder_frontend/widgets/login_popup.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
@@ -18,6 +20,7 @@ class BaseView extends StatefulWidget {
 
 class _BaseViewState extends State<BaseView> {
   int selectedIndex = 0;
+  final authController = Get.find<AuthController>();
 
   final List<Widget> _screens = [
     HomeView(),

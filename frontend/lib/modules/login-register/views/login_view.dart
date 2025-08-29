@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/images.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
+import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/login-register/views/register_view.dart';
+import 'package:minder_frontend/services/local_storage.dart';
+import 'package:minder_frontend/widgets/buttons/close_button.dart';
 import 'package:minder_frontend/widgets/custom_blue_button.dart';
 import 'package:minder_frontend/widgets/custom_text_field.dart';
 
@@ -110,7 +113,13 @@ class LoginView extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ),
+          Positioned(
+              top: 60, // Adjust as needed
+              left: 25,
+              child: CustomCloseButton(
+                onPressed: () => Get.to(BaseView()),
+              )),
         ],
       ),
     );

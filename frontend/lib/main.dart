@@ -20,12 +20,15 @@ void main() async {
   Get.put(MeditationSessionController(), permanent: true);
   Get.put(FavoriteController(), permanent: true);
 
-  final authController = Get.put(AuthController(), permanent: true);
-  await authController.tryAutoLogin();
-
-  Get.put(MeditationSessionController());
-
   await LocalStorage.initalizeStorage();
+
+  final authController = Get.put(AuthController(), permanent: true);
+  final isLoggedIn = await authController.tryAutoLogin();
+  if (!isLoggedIn) {
+    LocalStorage.setLocalParameter<bool>("isGuest", true);
+  } else {
+    LocalStorage.setLocalParameter<bool>("isGuest", false);
+  }
 
   await LocalizationService.initialize();
   Get.put(LocalizationService());
@@ -74,7 +77,7 @@ class MyApp extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        return auth.isLoggedIn.value ? const BaseView() : LoginView();
+        return BaseView();
       }),
     );
   }

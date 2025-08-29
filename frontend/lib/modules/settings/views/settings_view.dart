@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:minder_frontend/helpers/constants/colors.dart';
 import 'package:minder_frontend/helpers/constants/strings.dart';
 import 'package:minder_frontend/helpers/styles/text_style.dart';
+import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/login-register/controllers/auth_controller.dart';
 import 'package:minder_frontend/modules/settings/controllers/language_controller.dart';
 import 'package:minder_frontend/modules/settings/controllers/voice_controller.dart';
@@ -89,7 +90,7 @@ class _SettingsViewState extends State<SettingsView> {
                   confirmTextColor: Colors.white,
                   onConfirm: () {
                     _authCtrl.logout();
-                    Get.back();
+                    Get.to(BaseView());
                   },
                 );
               },
