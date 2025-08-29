@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:minder_frontend/models/user_model.dart';
 import 'package:minder_frontend/modules/base/views/base_view.dart';
 import 'package:minder_frontend/modules/login-register/views/login_view.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/favorite_controller.dart';
+import 'package:minder_frontend/modules/start%20meditation/controllers/journal_controller.dart';
 import 'package:minder_frontend/services/auth_service.dart';
 import 'package:minder_frontend/services/user_storage.dart';
 
@@ -53,6 +55,8 @@ class AuthController extends GetxController {
       isLoggedIn.value = true;
 
       await UserStorage.saveUserLocally(resp.user);
+      Get.find<FavoriteController>().loadFavorites();
+      Get.find<JournalController>().loadEntries();
       Get.offAll(() => const BaseView());
     } else {
       Get.snackbar('Error', 'Login failed');
